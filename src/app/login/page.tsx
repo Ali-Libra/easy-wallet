@@ -1,14 +1,15 @@
 'use client'
 import { useState } from 'react'
-import { ethers } from 'ethers'
+import { ethers, HDNodeWallet } from 'ethers'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import {useAuth} from '@context/auth';
 export default function Login() {
-  const [mnemonic, setMnemonic] = useState('')
-  const [wallet, setWallet] = useState(null)
-  const [status, setStatus] = useState('')
+ const [mnemonic, setMnemonic] = useState<string>('');
+  const [wallet, setWallet] = useState<HDNodeWallet | null>(null);
+  const [status, setStatus] = useState<string>('');
+
 
   const router = useRouter()
   const { login } = useAuth();

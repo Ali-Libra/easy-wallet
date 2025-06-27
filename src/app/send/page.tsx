@@ -3,28 +3,32 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 
 export default function SendTransaction() {
-  const [toAddress, setToAddress] = useState('')
-  const [sendAmount, setSendAmount] = useState('')
-  const [status, setStatus] = useState('')
-  const loggedWallet = localStorage.getItem('wallet');
+  const [toAddress, setToAddress] = useState<string>('');
+  const [sendAmount, setSendAmount] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
+
+  const loggedWallet = typeof window !== 'undefined' ? localStorage.getItem('wallet') : null;
+
   const sendTransaction = async () => {
     if (!loggedWallet || !toAddress || !sendAmount) {
       setStatus('请确保输入所有字段')
       return
     }
 
-    try {
-      const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID')
-      const tx = {
-        to: toAddress,
-        value: ethers.utils.parseEther(sendAmount),
-      }
+ try {
+      const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
+      setStatus('⚠️ 无法使用 provider.getSigner(address)。请使用连接钱包或私钥创建 signer。');
+      // return;
 
-      const signer = provider.getSigner(loggedWallet)
-      const transaction = await signer.sendTransaction(tx)
-      setStatus(`交易已发送！交易哈希: ${transaction.hash}`)
-    } catch (error) {
-      setStatus(`发送失败：${error.message}`)
+      // const tx = {
+      //   to: toAddress,
+      //   value: ethers.parseEther(sendAmount), // ethers v6 写法，不是 utils.parseEther
+      // };
+
+      // const transaction = await signer.sendTransaction(tx);
+      // setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
+    } catch (error: any) {
+      setStatus(`发送失败：${error.message}`);
     }
   }
 

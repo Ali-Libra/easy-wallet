@@ -4,14 +4,14 @@ import { ethers } from 'ethers'
 import Link from 'next/link';
 
 export default function Register() {
-  const [mnemonic, setMnemonic] = useState('')
-  const [status, setStatus] = useState('')
-  const createWallet = () => {
-    const newWallet = ethers.Wallet.createRandom()
-    const newMnemonic = newWallet.mnemonic.phrase
-    setMnemonic(newMnemonic)
-    setStatus('钱包已创建，点此登录')
-  }
+  const [mnemonic, setMnemonic] = useState<string>('')
+  const [status, setStatus] = useState<string>('')
+  const createWallet = (): void => {
+    const newWallet = ethers.Wallet.createRandom();
+    const newMnemonic: string = newWallet.mnemonic?.phrase ?? '';
+    setMnemonic(newMnemonic);
+    setStatus('钱包已创建，点此登录');
+  };
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(mnemonic)

@@ -5,23 +5,25 @@ import {useAuth } from '@context/auth';
 
 export default function Logged() {
   //下拉选单逻辑
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const buttonRef = useRef(null)
-  const dropdownRef = useRef(null)
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen)
   };
 
   // 点击区域外关闭下拉框
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (buttonRef.current &&
-        !buttonRef.current.contains(event.target) &&
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node) &&
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)) {
-        setIsMenuOpen(false)
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
       }
-    }
+    };
 
     if (isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside)
