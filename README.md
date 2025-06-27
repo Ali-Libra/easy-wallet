@@ -1,0 +1,1 @@
+A very simple blockchain wallet, but simple and user-friendly
