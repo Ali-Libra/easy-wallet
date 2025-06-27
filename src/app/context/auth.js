@@ -1,3 +1,4 @@
+import '../globals.css'
 import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
@@ -10,7 +11,12 @@ export const AuthProvider = ({ children }) => {
 
   const shortWallet = () => {
     if (!loggedWallet) return '';
-    return loggedWallet.length > 10 ? `${loggedWallet.slice(0, 6)}...${loggedWallet.slice(-4)}` : wallet;
+    return loggedWallet.length > 10 ? 
+      <span>
+        {`${loggedWallet.slice(0, 6)}`}
+        <span className="ellipsis">...</span>
+        {`${loggedWallet.slice(-4)}`}
+      </span> : wallet;
   };
 
   return (

@@ -25,20 +25,20 @@ export default function Header() {
     }
   }, [router]);
   
-  const [copySuccess, setCopySuccess] = useState(false)
+  const [copySuccess, setCopySuccess] = useState('')
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(loggedWallet)
 
-      setCopySuccess(true)
+      setCopySuccess('已复制')
       // 3秒后恢复状态
-      setTimeout(() => setCopySuccess(false), 1000)
+      setTimeout(() => setCopySuccess(''), 1000)
     } catch (err) {
-      setCopySuccess(false)
+      setCopySuccess('   ')
       console.error('复制失败:', err)
     }
   }
-
+// bg-gray-400
   return (
     <header className="bg-indigo-600 text-white p-4 flex justify-between items-center">
       <div className="flex items-center space-x-6">
@@ -58,7 +58,20 @@ export default function Header() {
 
       <div className="flex-1 flex justify-center">
         {loggedWallet && (
-          <button onClick={handleCopy} className="font-mono"> {shortWallet()} </button>
+          <div className="inline-flex items-center space-x-2">
+            <span className="font-mono">
+              {shortWallet()}
+            </span>
+            <button onClick={handleCopy}
+              className="w-4 h-4 bg-cover bg-center"
+              style={{backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }} // 替换成 public 目录下的图片路径
+            ></button>
+            {/* {copySuccess && (
+              <span className="text-xs">
+                {copySuccess}
+              </span>
+            )} */}
+          </div>
         )}
       </div>
 

@@ -7,3 +7,8 @@
     color: #1f2937;
   }
 }
+
+.ellipsis {
+  font-size: 0.8em;  /* 设置小的字体 */
+  letter-spacing: 0;  /* 去掉多余的间距 */
+}
