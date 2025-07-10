@@ -1,4 +1,4 @@
-import '../globals.css'
+import '@app/globals.css'
 import { HDNodeWallet } from 'ethers'
 import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
 

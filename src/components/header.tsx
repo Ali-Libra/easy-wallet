@@ -1,7 +1,8 @@
-import '../globals.css'
+import '@app/globals.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {useEffect, useState} from 'react'; 
+import { ethers } from 'ethers'
 
 import { isNotEmpty } from '@lib/util';
 
@@ -14,21 +15,26 @@ export default function Header() {
   const { loggedWallet, login, shortWallet } = useAuth();  // 在这里调用 useAuth
 
   useEffect(() => {
-    const storedWallet = localStorage.getItem('wallet');
-    if (isNotEmpty(storedWallet)) {
-      // 已登录，跳转到主页面
-      login(storedWallet);
-      router.push('/');
-    } else {
-      // 未登录，跳转到登录页面
-      router.push('/login');
+    const mnemonic = localStorage.getItem('mnemonic');
+    if (isNotEmpty(mnemonic)) {
+        try {
+          const newWallet = ethers.Wallet.fromPhrase(mnemonic)
+          login(newWallet)
+          localStorage.setItem('wallet', newWallet.address) // 保存钱包地址到本地存储;
+          router.push('/');
+          return;
+        } catch (error) {
+          console.error('登录失败:', error)
+        }
     }
+    // 未登录，跳转到登录页面
+    router.push('/login');
   }, [router]);
   
   const [copySuccess, setCopySuccess] = useState('')
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(loggedWallet)
+      await navigator.clipboard.writeText(loggedWallet?.address|| '')
 
       setCopySuccess('已复制')
       // 3秒后恢复状态

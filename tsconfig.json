@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
       "@lib/*": ["./src/ts-base/lib/*"],
       "@components/*": ["./src/component/*"],
       "@context/*": ["./src/context/*"]

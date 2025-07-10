@@ -18,11 +18,10 @@ export default function Login() {
   
   const handleLogin = () => {
     try {
-      const newWallet = 
-        ethers.Wallet.fromPhrase(mnemonicParam?mnemonicParam:mnemonic)
+      const realMnemonic = mnemonicParam?mnemonicParam:mnemonic
+      const newWallet = ethers.Wallet.fromPhrase(realMnemonic)
       login(newWallet)
-      // setStatus('钱包登录成功！')
-      localStorage.setItem('wallet', newWallet.address) // 保存钱包地址到本地存储;
+      localStorage.setItem('mnemonic', realMnemonic) // 保存钱包地址到本地存储;
       router.push('/');
     } catch (error) {
       console.error('登录失败:', error)
