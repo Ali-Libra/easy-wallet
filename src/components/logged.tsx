@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import {useAuth } from '@context/auth';
+import {useAuth } from '@/context/auth';
 
 export default function Logged() {
   //下拉选单逻辑

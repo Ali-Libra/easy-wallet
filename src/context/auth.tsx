@@ -1,9 +1,10 @@
 import '../globals.css'
+import { HDNodeWallet } from 'ethers'
 import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
 
 interface AuthContextType {
-  loggedWallet: string;
-  login: (addr: string) => void;
+  loggedWallet: HDNodeWallet | undefined;
+  login: (wallet: HDNodeWallet | undefined) => void;
   logout: () => void;
   shortWallet: () => JSX.Element | string;
 }
@@ -14,22 +15,23 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [loggedWallet, setIsLoggedIn] = useState('');  
-  const login = (addr: string) => {
-    setIsLoggedIn(addr);
+  const [loggedWallet, setWallet] = useState<HDNodeWallet | undefined>(undefined)
+  const login = (wallet: HDNodeWallet | undefined) => {
+    setWallet(wallet);
   }
-  const logout = () => setIsLoggedIn('');
+  const logout = () => setWallet(undefined);
 
   const shortWallet = (): JSX.Element | string => {
-    if (!loggedWallet) return '';
-    return loggedWallet.length > 10 ? (
+    if (loggedWallet === undefined) return '';
+    const walletStr = loggedWallet.address;
+    return walletStr.length > 10 ? (
       <span>
-        {loggedWallet.slice(0, 6)}
+        {walletStr.slice(0, 6)}
         <span className="ellipsis">...</span>
-        {loggedWallet.slice(-4)}
+        {walletStr.slice(-4)}
       </span>
     ) : (
-      loggedWallet // 修正了原代码中写成了不存在的变量 wallet
+      walletStr
     );
   };
 

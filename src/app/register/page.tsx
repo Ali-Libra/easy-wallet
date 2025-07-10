@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 import Link from 'next/link';
 
+import {MnemonicDisplay} from '@/components/display'
+
 export default function Register() {
   const [mnemonic, setMnemonic] = useState<string>('')
   const [status, setStatus] = useState<string>('')
@@ -12,13 +14,7 @@ export default function Register() {
     setMnemonic(newMnemonic);
     setStatus('钱包已创建，点此登录');
   };
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(mnemonic)
-    } catch (err) {
-      console.error('复制失败:', err)
-    }
-  }
+
 
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
@@ -32,14 +28,15 @@ export default function Register() {
       </button>
       
       {mnemonic && (
-        <div className="text-center mb-6">
+        <div className="flex flex-col items-center justify-center mb-6">
           <p className="font-bold">助记词</p>
-          <button onClick={handleCopy}  className="font-mono">{mnemonic}</button>
+          <div className="mt-2" />
+          <MnemonicDisplay mnemonic={mnemonic}/>
         </div>
       )}
           
       {status && 
-      (<Link href="/login"  className="w-full text-center text-gray-500 mt-4 block" >
+      (<Link href={{pathname:"/login", query: {mnemonic: mnemonic}}}  className="w-full text-center text-gray-500 mt-4 block" >
             <span>{status}</span>
       </Link>)}
       {/* {status && <p className="text-center text-gray-500 mt-4">{status}</p>} */}

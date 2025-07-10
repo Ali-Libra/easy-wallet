@@ -3,9 +3,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {useEffect, useState} from 'react'; 
 
-import { isNotEmpty } from '@lib/utils';
+import { isNotEmpty } from '@lib/util';
 
-import {useAuth} from '@context/auth';
+import {useAuth} from '@/context/auth';
 
 import Logged from './logged';
 
