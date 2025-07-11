@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import {useAuth } from '@/context/auth';
+import { userManager } from '@/lib/user';
+import { tryChangeAccount } from './auth';
 
 export default function Logged() {
   //下拉选单逻辑
@@ -39,14 +41,23 @@ export default function Logged() {
   
   //退出按钮逻辑
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, login } = useAuth()
   const handleLogout = () => {
     console.log('Logging out...');
     localStorage.removeItem('account');
     logout();
     router.push('/login');
   };
-
+  
+  const changeAccount = (account: string) => {
+    if (tryChangeAccount(account, login)) {
+      // router.push('/');
+      localStorage.setItem('account', account);
+      window.location.reload();
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <div className="relative">
@@ -57,6 +68,16 @@ export default function Logged() {
       
       {isMenuOpen && (
         <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-lg p-2">
+          {Object.entries(userManager.getAllUsers()).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => changeAccount(key)}
+              className="w-full text-left text-gray-700 hover:bg-gray-200 rounded p-1"
+            >
+              {label.account}
+            </button>
+          ))}
+          
           <button 
             onClick={handleLogout} 
             className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1">

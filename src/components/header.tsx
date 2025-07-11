@@ -9,6 +9,7 @@ import {useAuth} from '@/context/auth';
 import Logged from './logged';
 import {addressManager} from '@/lib/address';
 import { userManager } from '@/lib/user';
+import { tryChangeAccount } from './auth';
 
 export default function Header() {
   const router = useRouter();
@@ -16,20 +17,13 @@ export default function Header() {
 
   useEffect(() => {
     const account = localStorage.getItem('account');
-    const user = isNotEmpty(account)?userManager.getUserById(account):undefined;
-    if (user) {
-        try {
-          const newWallet = ethers.Wallet.fromPhrase(user.mnemonic)
-          login(user, newWallet)
-          router.push('/');
-          return;
-        } catch (error) {
-          console.error('登录失败:', error)
-        }
+    if(tryChangeAccount(account, login)) {
+      router.push('/');
+      // window.location.reload();
+    } else {
+      router.push("/login");
     }
-    // 未登录，跳转到登录页面
-    router.push('/login');
-  }, [router]);
+  }, []);
   
   const [copySuccess, setCopySuccess] = useState('')
   const handleCopy = async () => {

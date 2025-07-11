@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {MnemonicDisplay} from '@/components/display'
 
@@ -14,7 +15,6 @@ export default function Register() {
     setMnemonic(newMnemonic);
     setStatus('助记词已记下，点此登录');
   };
-
 
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
