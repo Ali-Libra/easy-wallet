@@ -9,6 +9,8 @@ interface AuthContextType {
   login: (user: User | undefined, wallet: HDNodeWallet) => User;
   logout: () => void;
   shortWallet: () => JSX.Element | string;
+  urlKey: string;
+  setUrlKey: (key: string) => void;
 }
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,6 +21,7 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [loggedWallet, setWallet] = useState<HDNodeWallet | undefined>(undefined)
   const [user, setUser] = useState<User | undefined>(undefined)
+  const [urlKey, setUrlKey] = useState("")
   const login = (user: User|undefined, wallet: HDNodeWallet) : User => {
     let localUser = user
     if(localUser === undefined) {
@@ -57,10 +60,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   return (
     <AuthContext.Provider value={{ 
       loggedWallet, 
-      login, 
-      user,
+      login,
       logout, 
-      shortWallet}}>
+      user,
+      shortWallet,
+      urlKey,setUrlKey}}>
       {children}
     </AuthContext.Provider>
   );

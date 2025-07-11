@@ -44,3 +44,9 @@ export const clickCopy = async (txt: string) => {
     console.error('复制失败:', err)
   }
 }
+
+export function format(template: string, values: Record<string, any>): string {
+  return template.replace(/\{(\w+)\}/g, (_, key) => {
+    return values[key] !== undefined ? values[key].toString() : `{${key}}`;
+  });
+}

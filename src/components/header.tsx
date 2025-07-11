@@ -46,9 +46,8 @@ export default function Header() {
       
       console.log('changeChain ', user)
     }
-    router.refresh();
-    // window.location.reload();
-    // router.replace(window.location.pathname);
+    window.location.reload();
+    // router.refresh();
   }
 // bg-gray-400
   return (

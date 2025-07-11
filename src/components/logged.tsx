@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import {useAuth } from '@/context/auth';
 import { userManager } from '@/lib/user';
 import { tryChangeAccount } from './auth';
+import ModalInput from './modalInput';
 
 export default function Logged() {
   //下拉选单逻辑
@@ -72,12 +73,13 @@ export default function Logged() {
             <button
               key={key}
               onClick={() => changeAccount(key)}
-              className="w-full text-left text-gray-700 hover:bg-gray-200 rounded p-1"
+              className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1"
             >
               {label.account}
             </button>
           ))}
           
+          <ModalInput></ModalInput>
           <button 
             onClick={handleLogout} 
             className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1">

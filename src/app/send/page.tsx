@@ -1,11 +1,14 @@
 'use client'
 import { useState } from 'react'
 import { ethers } from 'ethers'
+import { useAuth } from '@/context/auth';
+import { addressManager } from '@/lib/address';
 
 export default function SendTransaction() {
   const [toAddress, setToAddress] = useState<string>('');
   const [sendAmount, setSendAmount] = useState<string>('');
   const [status, setStatus] = useState<string>('');
+  const {user, urlKey} = useAuth()
 
   const loggedWallet = typeof window !== 'undefined' ? localStorage.getItem('wallet') : null;
 
@@ -16,7 +19,8 @@ export default function SendTransaction() {
     }
 
     try {
-      const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
+      const url = addressManager.getUrlByName(user!.chain, urlKey)
+      const provider = new ethers.JsonRpcProvider(url);
       setStatus('⚠️ 无法使用 provider.getSigner(address)。请使用连接钱包或私钥创建 signer。');
       // return;
 

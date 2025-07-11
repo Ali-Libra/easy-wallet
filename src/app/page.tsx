@@ -3,14 +3,18 @@ import { useState } from 'react'
 import { ethers, formatEther  } from 'ethers'
 
 import {useAuth} from '@/context/auth';
+import { addressManager } from '@/lib/address';
+import ModalInput from '@/components/modalInput';
 
 export default function Home() {
-  const {loggedWallet} = useAuth();
+  const {loggedWallet, user, urlKey} = useAuth();
   const [balance, setBalance] = useState('')
   const [status, setStatus] = useState('')
   const getBalance = async () => {
     if (loggedWallet) {
-      const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID')
+      const url = addressManager.getUrlByName(user!.chain, urlKey)
+      console.log("chain:", user?.chain, ", url:", url)
+      const provider = new ethers.JsonRpcProvider(url)
       const balance = await provider.getBalance(loggedWallet.address)
       setBalance(formatEther(balance))
       setStatus('余额已加载')
@@ -19,6 +23,7 @@ export default function Home() {
 
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <ModalInput></ModalInput>
       <h2 className="text-3xl font-bold text-center mb-6">钱包信息</h2>
 
       {loggedWallet && (
