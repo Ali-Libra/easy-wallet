@@ -12,7 +12,7 @@ export default function Register() {
     const newWallet = ethers.Wallet.createRandom();
     const newMnemonic: string = newWallet.mnemonic?.phrase ?? '';
     setMnemonic(newMnemonic);
-    setStatus('钱包已创建，点此登录');
+    setStatus('助记词已记下，点此登录');
   };
 
 
@@ -36,9 +36,13 @@ export default function Register() {
       )}
           
       {status && 
-      (<Link href={{pathname:"/login", query: {mnemonic: mnemonic}}}  className="w-full text-center text-gray-500 mt-4 block" >
-            <span>{status}</span>
-      </Link>)}
+      (
+      <div>
+        <span className="w-full text-center text-gray-500 mt-4 block">确保已经将助记词记录在密码本或纸上，如果遗忘将无法找回!</span>
+        <Link href={{pathname:"/login", query: {mnemonic: mnemonic}}}  className="w-full text-center text-gray-500 mt-4 block" >
+              <span>{status}</span>
+        </Link>
+      </div>)}
       {/* {status && <p className="text-center text-gray-500 mt-4">{status}</p>} */}
     </div>
   )

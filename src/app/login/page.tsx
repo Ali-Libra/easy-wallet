@@ -59,8 +59,6 @@ export default function Login() {
         </span>
       </Link>
       
-
-      {/* <Link href="/register" className="hover:text-gray-300">注册</Link> */}
     </div>
   )
 }

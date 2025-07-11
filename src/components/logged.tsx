@@ -42,7 +42,7 @@ export default function Logged() {
   const { logout } = useAuth();
   const handleLogout = () => {
     console.log('Logging out...');
-    localStorage.removeItem('wallet');
+    localStorage.removeItem('mnemonic');
     logout();
     router.push('/login');
   };

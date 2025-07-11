@@ -5,14 +5,13 @@ import {useEffect, useState} from 'react';
 import { ethers } from 'ethers'
 
 import { isNotEmpty } from '@lib/util';
-
 import {useAuth} from '@/context/auth';
-
 import Logged from './logged';
+import {addressManager} from '@/lib/address';
 
 export default function Header() {
   const router = useRouter();
-  const { loggedWallet, login, shortWallet } = useAuth();  // 在这里调用 useAuth
+  const { loggedWallet, login, shortWallet, chain, setChain } = useAuth();  // 在这里调用 useAuth
 
   useEffect(() => {
     const mnemonic = localStorage.getItem('mnemonic');
@@ -44,10 +43,17 @@ export default function Header() {
       console.error('复制失败:', err)
     }
   }
+
+  const changeChain = (chain: string) => {
+    setChain(chain)
+    router.refresh();
+    // window.location.reload();
+    // router.replace(window.location.pathname);
+  }
 // bg-gray-400
   return (
-    <header className="bg-indigo-600 text-white p-4 flex justify-between items-center">
-      <div className="flex items-center space-x-6">
+    <header className="bg-[var(--header)] text-[var(--text)] p-4 flex justify-between items-center">
+      <div>
         {loggedWallet ? (
           <div className="flex items-center space-x-6">
             <div className="flex space-x-6">
@@ -61,8 +67,7 @@ export default function Header() {
           </div>
         ) : null}
       </div>
-
-      <div className="flex-1 flex justify-center">
+      <div>
         {loggedWallet && (
           <div className="inline-flex items-center space-x-2">
             <span className="font-mono">
@@ -70,17 +75,29 @@ export default function Header() {
             </span>
             <button onClick={handleCopy}
               className="w-4 h-4 bg-cover bg-center"
-              style={{backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }} // 替换成 public 目录下的图片路径
+              style={{ backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }}
             ></button>
-            {/* {copySuccess && (
-              <span className="text-xs">
-                {copySuccess}
-              </span>
-            )} */}
-          </div>
-        )}
-      </div>
+            <select className=" text-white font-mono rounded-2xl px-0.5 py-0.5 ml-2"
+              value={chain ? chain : 'ethereum'}
+              onChange={(e) => changeChain(e.target.value)}
+            >
+              {addressManager.getAll().map((item, idx) => (
+                <option
+                  key={item.name || idx}
+                  value={item.name}
+                  className="bg-indigo-600 text-white rounded-2xl px-0.5 py-0.5"
+                >
+                  {item.name}
+                </option>
+              ))}
+            </select>
 
+
+          </div>
+
+        )}
+
+      </div>
       <div>
         {loggedWallet ? (
           <Logged />

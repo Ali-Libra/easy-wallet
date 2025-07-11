@@ -1,9 +1,12 @@
 import '@app/globals.css'
 import { HDNodeWallet } from 'ethers'
 import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
+import {User} from '@lib/user'
 
 interface AuthContextType {
   loggedWallet: HDNodeWallet | undefined;
+  chain: string;
+  setChain: (chain: string) => void;
   login: (wallet: HDNodeWallet | undefined) => void;
   logout: () => void;
   shortWallet: () => JSX.Element | string;
@@ -16,6 +19,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [loggedWallet, setWallet] = useState<HDNodeWallet | undefined>(undefined)
+  const [chain, setChain] = useState('');
   const login = (wallet: HDNodeWallet | undefined) => {
     setWallet(wallet);
   }
@@ -36,7 +40,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedWallet, login, logout, shortWallet }}>
+    <AuthContext.Provider value={{ 
+      loggedWallet, 
+      login, 
+      logout, 
+      shortWallet, 
+      chain, setChain }}>
       {children}
     </AuthContext.Provider>
   );

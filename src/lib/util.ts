@@ -37,10 +37,10 @@ export async function tryRun<T>(fn: () => Promise<T> | T, maxAttempts = 3, delay
   console.log('达到最大尝试次数，停止执行')
 }
 
-  export const clickCopy = async (txt:string) => {
-    try {
-      await navigator.clipboard.writeText(txt)
-    } catch (err) {
-      console.error('复制失败:', err)
-    }
+export const clickCopy = async (txt: string) => {
+  try {
+    await navigator.clipboard.writeText(txt)
+  } catch (err) {
+    console.error('复制失败:', err)
   }
+}

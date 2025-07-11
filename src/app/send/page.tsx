@@ -15,7 +15,7 @@ export default function SendTransaction() {
       return
     }
 
- try {
+    try {
       const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
       setStatus('⚠️ 无法使用 provider.getSigner(address)。请使用连接钱包或私钥创建 signer。');
       // return;
