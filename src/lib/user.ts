@@ -1,49 +1,60 @@
 // src/lib/UserManager.ts
 
 export type User = {
-  mnemonic: string;
-  name: string;
-  chain: string;
+    account: string;
+    mnemonic: string;
+    chain: string;
 };
 
 export class UserManager {
-  private cache: Record<string, User> = {};
-  private readonly STORAGE_KEY = "users";
+    private loaded = false;
+    private cache: Record<string, User> = {};
+    private readonly STORAGE_KEY = "users";
 
-  constructor() {
-    this.loadFromStorage();
-  }
+    constructor() {
 
-  private loadFromStorage() {
-    const raw = localStorage.getItem(this.STORAGE_KEY);
-    this.cache = raw ? JSON.parse(raw) : {};
-  }
+    }
 
-  private saveToStorage() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.cache));
-  }
+    private ensureLoaded() {
+        if (!this.loaded) {
+            const raw = localStorage.getItem(this.STORAGE_KEY);
+            this.cache = raw ? JSON.parse(raw) : {};
+            this.loaded = true;
+        }
+    }
+    private saveToStorage() {
+        this.ensureLoaded();
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.cache));
+    }
 
-  // 添加或更新用户
-  saveUser(user: User) {
-    this.cache[user.mnemonic] = user;
-    this.saveToStorage();
-  }
+    // 添加或更新用户
+    saveUser(user: User) {
+        this.ensureLoaded();
+        this.cache[user.account] = user;
+        this.saveToStorage();
+    }
 
-  // 获取单个用户
-  getUserById(mnemonic: string): User | undefined {
-    return this.cache[mnemonic];
-  }
+    // 获取单个用户
+    getUserById(account: string): User | undefined {
+        this.ensureLoaded();
+        return this.cache[account];
+    }
 
-  // 获取全部用户
-  getAllUsers(): Record<string, User> {
-    return this.cache;
-  }
+    // 获取全部用户
+    getAllUsers(): Record<string, User> {
+        this.ensureLoaded();
+        return this.cache;
+    }
 
-  // 清空缓存和本地存储
-  clearAll() {
-    this.cache = {};
-    localStorage.removeItem(this.STORAGE_KEY);
-  }
+    size(): number {
+        return Object.keys(this.cache).length;
+    }
+
+    // 清空缓存和本地存储
+    clearAll() {
+        this.cache = {};
+        localStorage.removeItem(this.STORAGE_KEY);
+    }
 }
 
 export const userManager = new UserManager();

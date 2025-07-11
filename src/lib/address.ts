@@ -38,5 +38,5 @@ class AddressManager {
 
 export const addressManager = new AddressManager([
   { name: "ethereum", avatar: "/dogdog.png", domain: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID" },
-  { name: "ethereum1", avatar: "/dogdog.png", domain: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID" }
+  { name: "sepolia", avatar: "/dogdog.png", domain: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID" }
 ]);

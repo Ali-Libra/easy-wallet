@@ -20,9 +20,9 @@ export default function Login() {
     try {
       const realMnemonic = mnemonicParam?mnemonicParam:mnemonic
       const newWallet = ethers.Wallet.fromPhrase(realMnemonic)
-      login(newWallet)
-      localStorage.setItem('mnemonic', realMnemonic) // 保存钱包地址到本地存储;
-      router.push('/');
+      const user = login(undefined, newWallet)
+      localStorage.setItem('account', user.account)
+      router.push('/')
     } catch (error) {
       console.error('登录失败:', error)
       setStatus('无效的助记词')

@@ -1,13 +1,12 @@
 import '@app/globals.css'
 import { HDNodeWallet } from 'ethers'
 import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
-import {User} from '@lib/user'
+import {User, userManager} from '@lib/user'
 
 interface AuthContextType {
   loggedWallet: HDNodeWallet | undefined;
-  chain: string;
-  setChain: (chain: string) => void;
-  login: (wallet: HDNodeWallet | undefined) => void;
+  user: User | undefined;
+  login: (user: User | undefined, wallet: HDNodeWallet) => User;
   logout: () => void;
   shortWallet: () => JSX.Element | string;
 }
@@ -19,11 +18,27 @@ interface AuthProviderProps {
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [loggedWallet, setWallet] = useState<HDNodeWallet | undefined>(undefined)
-  const [chain, setChain] = useState('');
-  const login = (wallet: HDNodeWallet | undefined) => {
+  const [user, setUser] = useState<User | undefined>(undefined)
+  const login = (user: User|undefined, wallet: HDNodeWallet) : User => {
+    let localUser = user
+    if(localUser === undefined) {
+      const phrase = wallet.mnemonic?.phrase
+      localUser = {
+        mnemonic: phrase||"",
+        account: "account" + (userManager.size()+1),
+        chain: "ethereum"
+      }
+      userManager.saveUser(localUser)
+    }
+
     setWallet(wallet);
+    setUser(user)
+    return localUser
   }
-  const logout = () => setWallet(undefined);
+  const logout = () => {
+    setWallet(undefined)
+    setUser(undefined)
+  };
 
   const shortWallet = (): JSX.Element | string => {
     if (loggedWallet === undefined) return '';
@@ -43,9 +58,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     <AuthContext.Provider value={{ 
       loggedWallet, 
       login, 
+      user,
       logout, 
-      shortWallet, 
-      chain, setChain }}>
+      shortWallet}}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,18 +8,19 @@ import { isNotEmpty } from '@lib/util';
 import {useAuth} from '@/context/auth';
 import Logged from './logged';
 import {addressManager} from '@/lib/address';
+import { userManager } from '@/lib/user';
 
 export default function Header() {
   const router = useRouter();
-  const { loggedWallet, login, shortWallet, chain, setChain } = useAuth();  // 在这里调用 useAuth
+  const { loggedWallet, login, shortWallet, user } = useAuth();  // 在这里调用 useAuth
 
   useEffect(() => {
-    const mnemonic = localStorage.getItem('mnemonic');
-    if (isNotEmpty(mnemonic)) {
+    const account = localStorage.getItem('account');
+    const user = isNotEmpty(account)?userManager.getUserById(account):undefined;
+    if (user) {
         try {
-          const newWallet = ethers.Wallet.fromPhrase(mnemonic)
-          login(newWallet)
-          localStorage.setItem('wallet', newWallet.address) // 保存钱包地址到本地存储;
+          const newWallet = ethers.Wallet.fromPhrase(user.mnemonic)
+          login(user, newWallet)
           router.push('/');
           return;
         } catch (error) {
@@ -45,7 +46,12 @@ export default function Header() {
   }
 
   const changeChain = (chain: string) => {
-    setChain(chain)
+    if(user !== undefined) {
+      user.chain = chain
+      userManager.saveUser(user)
+      
+      console.log('changeChain ', user)
+    }
     router.refresh();
     // window.location.reload();
     // router.replace(window.location.pathname);
@@ -78,7 +84,7 @@ export default function Header() {
               style={{ backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }}
             ></button>
             <select className=" text-white font-mono rounded-2xl px-0.5 py-0.5 ml-2"
-              value={chain ? chain : 'ethereum'}
+              value={user ? user.chain : 'ethereum'}
               onChange={(e) => changeChain(e.target.value)}
             >
               {addressManager.getAll().map((item, idx) => (
