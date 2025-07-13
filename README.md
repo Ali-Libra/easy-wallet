@@ -1,1 +1,12 @@
 A very simple blockchain wallet, but simple and user-friendly
+
+
+TODO:
+- 有登录过账号，即便退出了也可以在登录界面直接选择账号
+- ~~支持自定义链的访问域名~~
+- 支持更多的第三方访问链
+- 打包成浏览器插件
+- 支持更多的链的货币和ETC-20
+- 账号改名
+- 界面美化
+- 关闭显示测试网络

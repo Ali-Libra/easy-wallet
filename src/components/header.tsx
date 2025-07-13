@@ -80,13 +80,13 @@ export default function Header() {
               value={user ? user.chain : 'ethereum'}
               onChange={(e) => changeChain(e.target.value)}
             >
-              {addressManager.getAll().map((item, idx) => (
+              {addressManager.getAll().map((address, idx) => (
                 <option
-                  key={item.name || idx}
-                  value={item.name}
+                  key={address.name || idx}
+                  value={address.name}
                   className="bg-indigo-600 text-white rounded-2xl px-0.5 py-0.5"
                 >
-                  {item.name}
+                  {address.name}
                 </option>
               ))}
             </select>

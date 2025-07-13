@@ -2,10 +2,11 @@ import { format } from "@lib/util";
 
 // 定义一个地址信息结构体
 export type AddressInfo = {
-  avatar: string;
+  avatar: string; // 头像
   name: string;
   domain: string;
   isTest: boolean;
+  selfDomain?: string;
 };
 
 let alchemyUrl = "https://{domain}.g.alchemy.com/v2/{key}"
@@ -20,6 +21,10 @@ class AddressManager {
     // 初始化数据
     if (initialData) {
       for (const item of initialData) {
+        const saveDomain = localStorage.getItem("address:" + item.name)
+        if (saveDomain) {
+          item.selfDomain = saveDomain
+        }
         this.addressMap.set(item.name, item);
       }
     }
@@ -36,11 +41,13 @@ class AddressManager {
   }
 
   getUrlByName(name: string, urlKey: string): string | undefined {
-    
-    let domain = this.addressMap.get(name)?.domain;
-    if (!domain) return;
+    const address = this.addressMap.get(name)
+    if (!address) return;
+    if (address.selfDomain) {
+      return address.selfDomain
+    }
     const url = format(alchemyUrl, {
-      domain: domain,
+      domain: address.domain,
       key: urlKey,
     });
     console.log("getUrlByName:",url)
