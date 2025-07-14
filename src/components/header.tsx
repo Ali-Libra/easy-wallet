@@ -14,6 +14,7 @@ import { tryChangeAccount } from './auth';
 export default function Header() {
   const router = useRouter();
   const { loggedWallet, login, shortWallet, user } = useAuth();  // 在这里调用 useAuth
+  const haveUser = userManager.size() > 0;
 
   useEffect(() => {
     const account = localStorage.getItem('account');
@@ -98,7 +99,7 @@ export default function Header() {
 
       </div>
       <div>
-        {loggedWallet ? (
+        {haveUser ? (
           <Logged />
         ) : (
           <Link href="/login">

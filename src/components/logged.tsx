@@ -98,11 +98,13 @@ export default function Logged() {
 
 
           <ModalInput></ModalInput>
-          <button
-            onClick={handleLogout}
-            className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1">
-            退出
-          </button>
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1">
+              退出
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ A very simple blockchain wallet, but simple and user-friendly
 
 
 TODO:
-- 有登录过账号，即便退出了也可以在登录界面直接选择账号
+- ~~有登录过账号，即便退出了也可以在登录界面直接选择账号~~
 - ~~支持自定义链的访问域名~~
 - ~~点击头像展示当前账号，切换账号放在二级~~
 - 支持更多的第三方访问链
