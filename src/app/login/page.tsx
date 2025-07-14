@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { MnemonicInput } from '@/components/display';
 
 import {useAuth} from '@/context/auth';
+import { addressManager, ChainCurrency } from '@/lib/address';
 export default function Login() {
   const [mnemonic, setMnemonic] = useState<string>('');
   const [status, setStatus] = useState<string>('');
@@ -19,10 +20,11 @@ export default function Login() {
   const handleLogin = () => {
     try {
       const realMnemonic = mnemonicParam?mnemonicParam:mnemonic
-      const newWallet = ethers.Wallet.fromPhrase(realMnemonic)
-      const user = login(undefined, newWallet)
-      localStorage.setItem('account', user.account)
-      router.push('/')
+      addressManager.generateWallet(realMnemonic, ChainCurrency.ETH).then((wallet) =>{
+        const user = login(undefined, realMnemonic, wallet.address)
+        localStorage.setItem('account', user.account)
+        router.push('/')
+      })
     } catch (error) {
       console.error('登录失败:', error)
       setStatus('无效的助记词')

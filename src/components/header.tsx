@@ -2,34 +2,40 @@ import '@app/globals.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {useEffect, useState} from 'react'; 
-import { ethers } from 'ethers'
 
-import { isNotEmpty } from '@lib/util';
 import {useAuth} from '@/context/auth';
 import Logged from './logged';
 import {addressManager} from '@/lib/address';
 import { userManager } from '@/lib/user';
-import { tryChangeAccount } from './auth';
+import { isNotEmpty } from '@/lib/util';
+import { ethers } from "ethers";
 
 export default function Header() {
   const router = useRouter();
-  const { loggedWallet, login, shortWallet, user } = useAuth();  // 在这里调用 useAuth
+  const { user, address, login, shortWallet } = useAuth();  // 在这里调用 useAuth
   const haveUser = userManager.size() > 0;
 
   useEffect(() => {
     const account = localStorage.getItem('account');
-    if(tryChangeAccount(account, login)) {
-      router.push('/');
-      // window.location.reload();
-    } else {
-      router.push("/login");
+    const user = isNotEmpty(account) ? userManager.getUserById(account) : undefined;
+    if(user) {
+      const lib = addressManager.getLibByName(user.chain)
+      addressManager.generateWallet(user.mnemonic, lib).then((wallet) =>{
+        console.log("wallet:", wallet)
+        login(user, user.mnemonic, wallet.address)
+        router.push('/');
+        return
+      })
     }
+
+    router.push("/login");
+    addressManager.initSelfDomain();
   }, []);
   
   const [copySuccess, setCopySuccess] = useState('')
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(loggedWallet?.address|| '')
+      await navigator.clipboard.writeText(address || '')
 
       setCopySuccess('已复制')
       // 3秒后恢复状态
@@ -54,7 +60,7 @@ export default function Header() {
   return (
     <header className="bg-[var(--header)] text-[var(--text)] p-4 flex justify-between items-center">
       <div>
-        {loggedWallet ? (
+        {user ? (
           <div className="flex items-center space-x-6">
             <div className="flex space-x-6">
               <Link href="/">
@@ -68,7 +74,7 @@ export default function Header() {
         ) : null}
       </div>
       <div>
-        {loggedWallet && (
+        {user && (
           <div className="inline-flex items-center space-x-2">
             <span className="font-mono">
               {shortWallet()}

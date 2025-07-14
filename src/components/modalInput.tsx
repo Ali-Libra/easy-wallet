@@ -29,16 +29,15 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
                 setShow(false)
             }
         });
-        addressList.forEach((item, index) => {
-            const key = localStorage.getItem("address:"+item.name);
-            if (key) {
-                newInputs[index] = key;
+        addressList.forEach((address, index) => {
+            if(address.selfDomain) {
+                newInputs[titles.length+index] = address.selfDomain;
                 setShow(false)
             }
         });
 
         setInputs(newInputs);
-    }, [open]);
+    }, []);
 
 
     const handleInputChange = (index: number, value: string) => {
@@ -54,9 +53,11 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
     };
 
     const handleConfirmSelfDomain = (index: number, name: string) => {
-        console.log('handleConfirmSelfDomain len:', index)
-        if(inputs[index] === "") return;
         localStorage.setItem("address:"+name, inputs[index]);
+        const address = addressManager.getByName(name)
+        if(address) {
+            address.selfDomain = inputs[index]
+        }
     };
 
     return (

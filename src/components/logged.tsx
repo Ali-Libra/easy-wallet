@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/context/auth';
 import { userManager } from '@/lib/user';
-import { tryChangeAccount } from './auth';
 import ModalInput from './modalInput';
 
 export default function Logged() {
@@ -56,13 +55,15 @@ export default function Logged() {
   };
 
   const changeAccount = (account: string) => {
-    if (tryChangeAccount(account, login)) {
-      // router.push('/');
-      localStorage.setItem('account', account);
-      window.location.reload();
-    } else {
-      router.push("/login");
-    }
+    localStorage.setItem('account', account);
+    window.location.reload();
+    // if (tryChangeAccount(account, login)) {
+    //   // router.push('/');
+    //   localStorage.setItem('account', account);
+    //   window.location.reload();
+    // } else {
+    //   router.push("/login");
+    // }
   };
 
   return (

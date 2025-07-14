@@ -1,16 +1,15 @@
 import '@app/globals.css'
-import { HDNodeWallet } from 'ethers'
 import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
 import {User, userManager} from '@lib/user'
 
 interface AuthContextType {
-  loggedWallet: HDNodeWallet | undefined;
   user: User | undefined;
-  login: (user: User | undefined, wallet: HDNodeWallet) => User;
+  address: string | undefined,
+  login: (user: User|undefined, mnemonic: string, address: string) => User;
   logout: () => void;
-  shortWallet: () => JSX.Element | string;
   urlKey: string;
   setUrlKey: (key: string) => void;
+  shortWallet: () => JSX.Element | string;
 }
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,47 +18,45 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [loggedWallet, setWallet] = useState<HDNodeWallet | undefined>(undefined)
+  const [address, setAddress] = useState<string | undefined>(undefined)
   const [user, setUser] = useState<User | undefined>(undefined)
   const [urlKey, setUrlKey] = useState("")
-  const login = (user: User|undefined, wallet: HDNodeWallet) : User => {
+  const login = (user: User|undefined, mnemonic: string, address: string) : User => {
     let localUser = user
     if(localUser === undefined) {
-      const phrase = wallet.mnemonic?.phrase
       localUser = {
-        mnemonic: phrase||"",
+        mnemonic: mnemonic,
         account: "account" + (userManager.size()+1),
         chain: "ethereum"
       }
       userManager.saveUser(localUser)
     }
 
-    setWallet(wallet);
-    setUser(user)
+    setAddress(address);
+    setUser(localUser)
     return localUser
   }
   const logout = () => {
-    setWallet(undefined)
+    setAddress(undefined)
     setUser(undefined)
   };
 
   const shortWallet = (): JSX.Element | string => {
-    if (loggedWallet === undefined) return '';
-    const walletStr = loggedWallet.address;
-    return walletStr.length > 10 ? (
+    if (address === undefined) return '';
+    return address.length > 10 ? (
       <span>
-        {walletStr.slice(0, 6)}
+        {address.slice(0, 6)}
         <span className="ellipsis">...</span>
-        {walletStr.slice(-4)}
+        {address.slice(-4)}
       </span>
     ) : (
-      walletStr
+      address
     );
   };
 
   return (
     <AuthContext.Provider value={{ 
-      loggedWallet, 
+      address, 
       login,
       logout, 
       user,
