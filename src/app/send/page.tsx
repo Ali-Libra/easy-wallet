@@ -2,37 +2,72 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
 import { useAuth } from '@/context/auth';
-import { addressManager } from '@/lib/address';
+import { addressManager, ChainCurrency } from '@/lib/address';
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
+import { hexToUint8Array } from '@/lib/util';
 
 export default function SendTransaction() {
   const [toAddress, setToAddress] = useState<string>('');
   const [sendAmount, setSendAmount] = useState<string>('');
   const [status, setStatus] = useState<string>('');
-  const {user, urlKey} = useAuth()
-
-  const loggedWallet = typeof window !== 'undefined' ? localStorage.getItem('wallet') : null;
-
+  const { user, wallet, urlKey } = useAuth()
+  const [sending, setSending] = useState(false)
   const sendTransaction = async () => {
-    if (!loggedWallet || !toAddress || !sendAmount) {
+    if (sending) {
+      alert('正在发送中，请勿重复点击')
+      return
+    }
+
+    if (!toAddress || !sendAmount) {
       setStatus('请确保输入所有字段')
       return
     }
 
+    if (!user || !wallet) {
+      setStatus('请先登录钱包')
+      return
+    }
+
+    const [url, currency] = addressManager.getUrlByName(user.chain, urlKey)
+    if(!url) {
+      setStatus('请先登录钱包')
+      return
+    }
     try {
-      const url = addressManager.getUrlByName(user!.chain, urlKey)
-      const provider = new ethers.JsonRpcProvider(url);
-      setStatus('⚠️ 无法使用 provider.getSigner(address)。请使用连接钱包或私钥创建 signer。');
-      // return;
+      setSending(true)
+      if (currency == ChainCurrency.ETH) {
+        const provider = new ethers.JsonRpcProvider(url);
+        const newWallet = new ethers.Wallet(wallet.privateKey, provider)
+        const tx = {
+          to: toAddress,
+          value: ethers.parseEther(sendAmount),
+        };
+        const transaction = await newWallet.sendTransaction(tx)
+        await transaction.wait()
+        setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
+        setSending(false)
+      } else if (currency == ChainCurrency.SOLANA) {
+        const connection = new Connection(url, 'confirmed')
+        const from = Keypair.fromSecretKey(hexToUint8Array(wallet.privateKey))
+        const to = new PublicKey(toAddress)
 
-      // const tx = {
-      //   to: toAddress,
-      //   value: ethers.parseEther(sendAmount), // ethers v6 写法，不是 utils.parseEther
-      // };
+        const tx = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: from.publicKey,
+            toPubkey: to,
+            lamports: Number(sendAmount) * LAMPORTS_PER_SOL,
+          })
+        )
 
-      // const transaction = await signer.sendTransaction(tx);
-      // setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
+        const signature = await sendAndConfirmTransaction(connection, tx, [from])
+        setStatus(`交易已发送！交易哈希: ${signature}`);
+        setSending(false)
+      } else {
+        setStatus('暂不支持此链')
+      }
     } catch (error: any) {
       setStatus(`发送失败：${error.message}`);
+      setSending(false)
     }
   }
 
@@ -50,7 +85,7 @@ export default function SendTransaction() {
 
       <input
         type="text"
-        placeholder="金额 (ETH)"
+        placeholder="金额"
         value={sendAmount}
         onChange={(e) => setSendAmount(e.target.value)}
         className="w-full border border-gray-300 rounded-md p-2 mb-4"

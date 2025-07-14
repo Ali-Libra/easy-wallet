@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 
 export default function Header() {
   const router = useRouter();
-  const { user, address, login, shortWallet } = useAuth();  // 在这里调用 useAuth
+  const { user, wallet, login, shortWallet } = useAuth();  // 在这里调用 useAuth
   const haveUser = userManager.size() > 0;
 
   useEffect(() => {
@@ -21,8 +21,7 @@ export default function Header() {
     if(user) {
       const lib = addressManager.getLibByName(user.chain)
       addressManager.generateWallet(user.mnemonic, lib).then((wallet) =>{
-        console.log("wallet:", wallet)
-        login(user, user.mnemonic, wallet.address)
+        login(user, user.mnemonic, wallet)
         router.push('/');
         return
       })
@@ -35,7 +34,7 @@ export default function Header() {
   const [copySuccess, setCopySuccess] = useState('')
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(address || '')
+      await navigator.clipboard.writeText(wallet?.address || '')
 
       setCopySuccess('已复制')
       // 3秒后恢复状态

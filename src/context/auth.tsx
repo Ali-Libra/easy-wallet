@@ -4,13 +4,18 @@ import {User, userManager} from '@lib/user'
 
 interface AuthContextType {
   user: User | undefined;
-  address: string | undefined,
-  login: (user: User|undefined, mnemonic: string, address: string) => User;
+  wallet: Wallet | undefined,
+  login: (user: User|undefined, mnemonic: string, wallet: Wallet) => User;
   logout: () => void;
   urlKey: string;
   setUrlKey: (key: string) => void;
   shortWallet: () => JSX.Element | string;
 }
+
+export type Wallet = {
+    address: string;
+    privateKey: string;
+};
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -18,10 +23,10 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [address, setAddress] = useState<string | undefined>(undefined)
+  const [wallet, setWallet] = useState<Wallet | undefined>(undefined)
   const [user, setUser] = useState<User | undefined>(undefined)
   const [urlKey, setUrlKey] = useState("")
-  const login = (user: User|undefined, mnemonic: string, address: string) : User => {
+  const login = (user: User|undefined, mnemonic: string, wallet: Wallet) : User => {
     let localUser = user
     if(localUser === undefined) {
       localUser = {
@@ -32,31 +37,31 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       userManager.saveUser(localUser)
     }
 
-    setAddress(address);
+    setWallet(wallet);
     setUser(localUser)
     return localUser
   }
   const logout = () => {
-    setAddress(undefined)
+    setWallet(undefined)
     setUser(undefined)
   };
 
   const shortWallet = (): JSX.Element | string => {
-    if (address === undefined) return '';
-    return address.length > 10 ? (
+    if (wallet === undefined) return '';
+    return wallet.address.length > 10 ? (
       <span>
-        {address.slice(0, 6)}
+        {wallet.address.slice(0, 6)}
         <span className="ellipsis">...</span>
-        {address.slice(-4)}
+        {wallet.address.slice(-4)}
       </span>
     ) : (
-      address
+      wallet.address
     );
   };
 
   return (
     <AuthContext.Provider value={{ 
-      address, 
+      wallet, 
       login,
       logout, 
       user,

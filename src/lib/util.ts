@@ -50,3 +50,14 @@ export function format(template: string, values: Record<string, any>): string {
     return values[key] !== undefined ? values[key].toString() : `{${key}}`;
   });
 }
+
+export function hexToUint8Array(hexString: string): Uint8Array {
+  if (hexString.length % 2 !== 0) {
+    throw new Error('Invalid hex string')
+  }
+  const arr = new Uint8Array(hexString.length / 2)
+  for (let i = 0; i < hexString.length; i += 2) {
+    arr[i / 2] = parseInt(hexString.substr(i, 2), 16)
+  }
+  return arr
+}

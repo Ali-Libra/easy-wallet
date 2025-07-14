@@ -72,7 +72,7 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
 
             {show && (
                 <div className="fixed inset-0 bg-gray-300/25 backdrop-blur-sm flex justify-center items-start pt-20 z-50">
-                    <div className="relative bg-white rounded-lg shadow-lg p-6 w-2/5 max-h-[60vh] overflow-y-auto">
+                    <div className="relative bg-white rounded-lg shadow-lg p-6 w-[32rem] max-h-[60vh] overflow-y-auto">
                         {/* 右上角关闭按钮 */}
                         <button
                             onClick={() => setShow(false)}
@@ -90,7 +90,7 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
                                 <input
                                     value={inputs[index]}
                                     onChange={(e) => handleInputChange(index, e.target.value)}
-                                    className="w-56 border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
+                                    className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
                                     placeholder={`${title}的ID`}
                                 />
                                 <div className="mt-0.5" />
@@ -112,7 +112,7 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
                                 <input
                                     value={inputs[titles.length+index]}
                                     onChange={(e) => handleInputChange(titles.length+index, e.target.value)}
-                                    className="w-56 border border-gray-300 rounded px-2 py-1 text-black"
+                                    className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black"
                                 />
                                 <div className="mt-0.5" />
                                 <button

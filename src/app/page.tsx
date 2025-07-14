@@ -1,20 +1,20 @@
 'use client'
 import { useState } from 'react'
 import { ethers, formatEther  } from 'ethers'
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Connection, LAMPORTS_PER_SOL, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
 import {useAuth} from '@/context/auth';
 import { addressManager, ChainCurrency } from '@/lib/address';
 import ModalInput from '@/components/modalInput';
 
 export default function Home() {
-  const {address, user, urlKey} = useAuth();
+  const {wallet, user, urlKey} = useAuth();
   const [balance, setBalance] = useState('')
   const [status, setStatus] = useState('')
   const [currency, setCurrency ] = useState(ChainCurrency.ETH)
 
   const getBalance = async () => {
-    if (!address) {
+    if (!wallet) {
       setStatus('请先登录钱包')
       return
     }
@@ -27,13 +27,13 @@ export default function Home() {
 
     if(curr == ChainCurrency.ETH) {
       const provider = new ethers.JsonRpcProvider(url)
-      const balance = await provider.getBalance(address)
+      const balance = await provider.getBalance(wallet.address)
       setBalance(formatEther(balance))
     } else if(curr == ChainCurrency.SOLANA) {
       const connection = new Connection(url, 'confirmed');
-      const publicKey = new PublicKey(address);
+      const publicKey = new PublicKey(wallet.address);
       const balance = await connection.getBalance(publicKey);
-      setBalance((balance / 1_000_000_000).toString())
+      setBalance((balance / LAMPORTS_PER_SOL).toString())
     } else {
       setStatus('未定义的币种')
       return
