@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import {useAuth } from '@/context/auth';
+import { useAuth } from '@/context/auth';
 import { userManager } from '@/lib/user';
 import { tryChangeAccount } from './auth';
 import ModalInput from './modalInput';
@@ -11,6 +11,10 @@ export default function Logged() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const { user } = useAuth();
+  const [expanded, setExpanded] = useState(false);
+  const toggleDropdown = () => setExpanded((prev) => !prev);
+  const hasMultipleUsers = userManager.size() > 1;
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen)
   };
@@ -25,6 +29,7 @@ export default function Logged() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsMenuOpen(false);
+        setExpanded(false);
       }
     };
 
@@ -39,7 +44,7 @@ export default function Logged() {
     }
   }, [isMenuOpen])
 
-  
+
   //退出按钮逻辑
   const router = useRouter();
   const { logout, login } = useAuth()
@@ -49,7 +54,7 @@ export default function Logged() {
     logout();
     router.push('/login');
   };
-  
+
   const changeAccount = (account: string) => {
     if (tryChangeAccount(account, login)) {
       // router.push('/');
@@ -66,22 +71,35 @@ export default function Logged() {
         className="w-12 h-12 rounded-full bg-cover bg-center"
         style={{ backgroundImage: 'url(/dogdog.png)' }} // 替换成 public 目录下的图片路径
       ></button>
-      
+
       {isMenuOpen && (
         <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-lg p-2">
-          {Object.entries(userManager.getAllUsers()).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => changeAccount(key)}
-              className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1"
-            >
-              {label.account}
-            </button>
-          ))}
-          
+          <button
+            onClick={toggleDropdown}
+            className="text-base w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1 font-semibold"
+          >
+            {user?.account || "未登录"}
+            {hasMultipleUsers &&
+              <span className="text-base text-gray-500">▾</span>}
+          </button>
+          {expanded && (
+            Object.entries(userManager.getAllUsers())
+              .filter(([key, user1]) => user1.account !== user?.account)
+              .map(([key, user]) => (
+                <button
+                  key={key}
+                  onClick={() => changeAccount(key)}
+                  className="text-sm w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1"
+                >
+                  {user.account}
+                </button>
+              ))
+          )}
+
+
           <ModalInput></ModalInput>
-          <button 
-            onClick={handleLogout} 
+          <button
+            onClick={handleLogout}
             className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1">
             退出
           </button>
