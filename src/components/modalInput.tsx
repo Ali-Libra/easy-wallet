@@ -53,11 +53,7 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
     };
 
     const handleConfirmSelfDomain = (index: number, name: string) => {
-        localStorage.setItem("address:"+name, inputs[index]);
-        const address = addressManager.getByName(name)
-        if(address) {
-            address.selfDomain = inputs[index]
-        }
+        addressManager.setSelfDomain(name, inputs[index])
     };
 
     return (

@@ -1,4 +1,4 @@
-import { format } from "@lib/util";
+import { format, insertWithLimit } from "@lib/util";
 import * as bip39 from 'bip39';
 import { derivePath as deriveEd25519 } from 'ed25519-hd-key';
 import { Keypair as SolanaKeypair } from '@solana/web3.js';
@@ -6,12 +6,13 @@ import { ethers } from 'ethers';
 
 // 定义一个地址信息结构体
 export type AddressInfo = {
+  name: string; //链的名字
   avatar: string; // 头像
-  name: string;
-  domain: string;
+  domain: string; //链的地址
   isTest: boolean;
-  selfDomain?: string;
+  selfDomain?: string; //自定义地址
   useLib: ChainCurrency;
+  history?: string[]; //交易历史
 };
 
 export enum ChainCurrency {
@@ -20,6 +21,8 @@ export enum ChainCurrency {
 }
 
 let alchemyUrl = "https://{domain}.g.alchemy.com/v2/{key}"
+const SELF_DOMAIN_KEY = "selfDomain:"
+const HISTORY_KEY = "history:"
 
 // 地址管理器类
 class AddressManager {
@@ -38,21 +41,52 @@ class AddressManager {
 
   initSelfDomain() {
     for (const [name, address] of this.addressMap) {
-      const saveDomain = localStorage.getItem("address:" + address.name)
+      const saveDomain = localStorage.getItem(SELF_DOMAIN_KEY + address.name)
       if (saveDomain) {
         address.selfDomain = saveDomain
       }
     }
   }
 
-  // 添加地址
-  addAddress(info: AddressInfo) {
-    this.addressMap.set(info.name, info);
+  setSelfDomain(name: string, domain: string) {
+    const address = this.addressMap.get(name)
+    if (address) {
+      address.selfDomain = domain
+      localStorage.setItem(SELF_DOMAIN_KEY+name, domain);
+    }
+  }
+
+  initSendHistory() {
+    for (const [name, address] of this.addressMap) {
+      const raw = localStorage.getItem(HISTORY_KEY + address.name)
+      if (raw) {
+        address.history = JSON.parse(raw)
+      }
+    }
+  }
+
+  addSendHistory(name: string, history: string) {
+    const address = this.addressMap.get(name)
+    if (address) {
+      if (!address.history) {
+        address.history = [];
+      }
+      insertWithLimit(address.history, history)
+      localStorage.setItem(HISTORY_KEY+name, JSON.stringify(address.history));
+    }
   }
 
   // 通过 name 获取地址信息
   getByName(name: string): AddressInfo | undefined {
     return this.addressMap.get(name);
+  }
+
+  getHistroyByName(name: string): string[] | undefined {
+    const address =  this.addressMap.get(name);
+    if(address) {
+      return address.history;
+    }
+    return undefined;
   }
 
   getUrlByName(name: string, urlKey: string): [string | undefined, ChainCurrency] {

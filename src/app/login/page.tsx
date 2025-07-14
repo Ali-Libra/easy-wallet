@@ -21,7 +21,7 @@ export default function Login() {
     try {
       const realMnemonic = mnemonicParam?mnemonicParam:mnemonic
       addressManager.generateWallet(realMnemonic, ChainCurrency.ETH).then((wallet) =>{
-        const user = login(undefined, realMnemonic, wallet.address)
+        const user = login(undefined, realMnemonic, wallet)
         localStorage.setItem('account', user.account)
         router.push('/')
       })

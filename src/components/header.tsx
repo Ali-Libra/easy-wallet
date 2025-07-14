@@ -29,6 +29,7 @@ export default function Header() {
 
     router.push("/login");
     addressManager.initSelfDomain();
+    addressManager.initSendHistory();
   }, []);
   
   const [copySuccess, setCopySuccess] = useState('')

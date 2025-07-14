@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { useAuth } from '@/context/auth';
 import { addressManager, ChainCurrency } from '@/lib/address';
@@ -12,6 +12,16 @@ export default function SendTransaction() {
   const [status, setStatus] = useState<string>('');
   const { user, wallet, urlKey } = useAuth()
   const [sending, setSending] = useState(false)
+  const [history, setHistory] = useState<string[] | undefined>(undefined)
+
+  useEffect(() => {
+    if (!user) {
+      return
+    }
+    const oldHistory = addressManager.getHistroyByName(user.chain)
+    setHistory(oldHistory)
+  })
+
   const sendTransaction = async () => {
     if (sending) {
       alert('正在发送中，请勿重复点击')
@@ -29,7 +39,7 @@ export default function SendTransaction() {
     }
 
     const [url, currency] = addressManager.getUrlByName(user.chain, urlKey)
-    if(!url) {
+    if (!url) {
       setStatus('请先登录钱包')
       return
     }
@@ -45,7 +55,6 @@ export default function SendTransaction() {
         const transaction = await newWallet.sendTransaction(tx)
         await transaction.wait()
         setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
-        setSending(false)
       } else if (currency == ChainCurrency.SOLANA) {
         const connection = new Connection(url, 'confirmed')
         const from = Keypair.fromSecretKey(hexToUint8Array(wallet.privateKey))
@@ -61,10 +70,14 @@ export default function SendTransaction() {
 
         const signature = await sendAndConfirmTransaction(connection, tx, [from])
         setStatus(`交易已发送！交易哈希: ${signature}`);
-        setSending(false)
       } else {
         setStatus('暂不支持此链')
+        return
       }
+
+      setSending(false)
+      addressManager.addSendHistory(user.chain, toAddress)
+      setHistory(addressManager.getHistroyByName(user.chain))
     } catch (error: any) {
       setStatus(`发送失败：${error.message}`);
       setSending(false)
@@ -76,12 +89,20 @@ export default function SendTransaction() {
       <h2 className="text-3xl font-bold text-center mb-6">发送</h2>
 
       <input
+        list="history-addresses"
         type="text"
         placeholder="收款地址"
         value={toAddress}
         onChange={(e) => setToAddress(e.target.value)}
         className="w-full border border-gray-300 rounded-md p-2 mb-4"
       />
+      {history && (
+        <datalist id="history-addresses">
+          {history.map((item, index) => (
+            <option key={index} value={item} />
+          ))}
+        </datalist>
+      )}
 
       <input
         type="text"
@@ -95,7 +116,7 @@ export default function SendTransaction() {
         onClick={sendTransaction}
         className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
       >
-        发送
+        {sending ? '发送中' : '发送'}
       </button>
 
       {status && <p className="text-center text-gray-500 mt-4">{status}</p>}

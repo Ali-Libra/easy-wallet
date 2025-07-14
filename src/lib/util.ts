@@ -61,3 +61,15 @@ export function hexToUint8Array(hexString: string): Uint8Array {
   }
   return arr
 }
+
+export function insertWithLimit<T>(arr: T[], item: T, maxLen = 10): T[] {
+  const index = arr.indexOf(item);
+  if (index !== -1) {
+    arr.splice(index, 1);
+  }
+  arr.unshift(item);
+  if (arr.length > maxLen) {
+    arr.pop(); // 超出长度移除最后一个
+  }
+  return arr;
+}
