@@ -32,7 +32,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       localUser = {
         mnemonic: mnemonic,
         account: "account" + (userManager.size()+1),
-        chain: "ethereum"
+        chain: "Ethereum"
       }
       userManager.saveUser(localUser)
     }

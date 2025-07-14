@@ -32,7 +32,6 @@ export default function Login() {
   }
 
   const handleMnemonicChange = (words: string) => {
-    console.log('handleMnemonicChange', words)
     setMnemonic(words)
   }
 

@@ -84,7 +84,7 @@ export default function Header() {
               style={{ backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }}
             ></button>
             <select className=" text-white font-mono rounded-2xl px-0.5 py-0.5 ml-2"
-              value={user ? user.chain : 'ethereum'}
+              value={user ? user.chain : 'Ethereum'}
               onChange={(e) => changeChain(e.target.value)}
             >
               {addressManager.getAll().map((address, idx) => (
