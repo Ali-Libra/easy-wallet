@@ -5,12 +5,10 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Send from './pages/Send'
 import Header from './components/header'
-import { AuthProvider } from './context/auth'
 
 export default function App() {
   return (
     <HashRouter>
-      <AuthProvider>
         <div className="min-h-screen bg-gray-100 flex flex-col">
           <Header />
           <main className="flex-grow p-6">
@@ -22,7 +20,6 @@ export default function App() {
             </Routes>
           </main>
         </div>
-      </AuthProvider>
     </HashRouter>
   )
 }

@@ -1,17 +1,10 @@
+@import "tailwindcss";
+
 html,body,#root {
-  width: 360px;
+  width: 500;
   height: 600px;
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  --header-tmp: #f1a960;
-  --header: #4f39f6;
-  --text: #ffffff;
-  --text-notice: #364153;
-  --select: #ffffff;
-  --btn: #155dfc;
-  --btn-hover: #1447e6;
-  --btn-text: #ffffff;
 }
 
 @layer base {

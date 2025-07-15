@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { MnemonicInput } from '@/components/display'
 import { useAuth } from '@/context/auth'
 import { chainManager, ChainCurrency } from '@/lib/chain'
@@ -13,10 +13,11 @@ export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
 
+  const [searchParams] = useSearchParams()
+
   // 用 useEffect 读取 URL 查询参数，保证 window 对象存在
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    setMnemonicParam(params.get('mnemonic'))
+    setMnemonicParam(searchParams.get('mnemonic'))
   }, [])
 
   const handleLogin = () => {

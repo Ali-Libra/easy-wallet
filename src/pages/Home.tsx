@@ -1,4 +1,3 @@
-'use client'
 import { useState, useEffect } from 'react'
 import { ethers, formatEther } from 'ethers'
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
@@ -25,6 +24,11 @@ export default function Home() {
     if (!wallet || !user) {
       setStatus('请先登录钱包')
       return
+    }
+
+    if(urlKey == "") {
+      alert("没有请求key")
+      return;
     }
     const [url, curr] = chainManager.getUrlByName(user.chain, urlKey)
     if (!url) {
