@@ -25,6 +25,7 @@
 # misc
 .DS_Store
 *.pem
+*.crx
 
 # debug
 npm-debug.log*
