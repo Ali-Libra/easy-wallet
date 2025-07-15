@@ -1,5 +1,5 @@
-import '@app/globals.css'
-import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
+import '@/globals.css'
+import { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
 import {User, userManager} from '@lib/user'
 import { ChainType } from '@/lib/chain';
 

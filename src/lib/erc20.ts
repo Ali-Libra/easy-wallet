@@ -1,8 +1,6 @@
-import { ethers } from "ethers";
+import { ethers, JsonRpcProvider } from "ethers";
 import { ChainType } from "./chain";
-import { JsonRpcProvider } from 'ethers';
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getAccount, getMint, getAssociatedTokenAddress, TokenAccountNotFoundError } from '@solana/spl-token';
 
 const ERC20_ABI = [
   'function name() view returns (string)',
@@ -50,19 +48,33 @@ class Erc20Manager {
     const mint = new PublicKey(mintAddress);
     const user = new PublicKey(userAddress);
 
-    const ata = await getAssociatedTokenAddress(mint, user);
-    try {
-      const accountInfo = await getAccount(connection, ata);
-      const mintInfo = await getMint(connection, mint);
-      const balance = Number(accountInfo.amount) / 10 ** mintInfo.decimals;
-      return balance.toString();
-    } catch (e) {
-      if (e instanceof TokenAccountNotFoundError) {
-        // 账户不存在，余额为0
-        return "0.0";
+    async function getUsdtBalance() {
+      const associatedTokenAddress = await PublicKey.findProgramAddress(
+        [
+          user.toBuffer(),
+          new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA').toBuffer(), // SPL Token Program ID
+          mint.toBuffer()
+        ],
+        new PublicKey('ATokenGPvbdGVxr1dE3S6pPnxAqYdzfqbGJdYdz1hJ4') // Associated Token Program ID
+      )
+
+      const tokenAccountAddress = associatedTokenAddress[0]
+
+      const accountInfo = await connection.getParsedAccountInfo(tokenAccountAddress)
+
+      if (!accountInfo.value) {
+        console.log('USDT Token Account 不存在')
+        return 0
       }
-      throw e; // 其他错误继续抛
+
+      const parsedInfo = (accountInfo.value.data as any).parsed.info
+      const amount = parsedInfo.tokenAmount.uiAmount
+
+      console.log(`USDT 余额: ${amount}`)
+      return amount
     }
+
+    return getUsdtBalance()
   }
 
   getByName(chain: string): Erc20Info[] | undefined {

@@ -1,7 +1,6 @@
-import '@app/globals.css'
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import '@/globals.css'
 import {useEffect, useState} from 'react'; 
+import { Link, useNavigate } from 'react-router-dom'
 
 import {useAuth} from '@/context/auth';
 import Logged from './logged';
@@ -10,7 +9,7 @@ import { userManager } from '@/lib/user';
 import { isNotEmpty } from '@/lib/util';
 
 export default function Header() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user, wallet, login, shortWallet } = useAuth();  // 在这里调用 useAuth
   const haveUser = userManager.size() > 0;
 
@@ -21,12 +20,12 @@ export default function Header() {
       const lib = chainManager.getLibByName(user.chain)
       chainManager.generateWallet(user.mnemonic, lib).then((wallet) =>{
         login(user, user.mnemonic, wallet)
-        router.push('/');
+        navigate('/');
         return
       })
     }
 
-    router.push("/login");
+    navigate("/login");
     chainManager.initSelfDomain();
     chainManager.initSendHistory();
   }, []);
@@ -62,10 +61,10 @@ export default function Header() {
         {user ? (
           <div className="flex items-center space-x-6">
             <div className="flex space-x-6">
-              <Link href="/">
+              <Link to="/">
                 <span className="cursor-pointer hover:text-indigo-300">钱包</span>
               </Link>
-              <Link href="/send">
+              <Link to="/send">
                 <span className="cursor-pointer hover:text-indigo-300">交易</span>
               </Link>
             </div>
@@ -107,7 +106,7 @@ export default function Header() {
         {haveUser ? (
           <Logged />
         ) : (
-          <Link href="/login">
+          <Link to="/login">
             <span className="cursor-pointer hover:text-indigo-300">登录</span>
           </Link>
         )}

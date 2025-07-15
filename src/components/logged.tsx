@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '@/context/auth';
 import { userManager } from '@/lib/user';
@@ -45,13 +45,13 @@ export default function Logged() {
 
 
   //退出按钮逻辑
-  const router = useRouter();
+  const navigate = useNavigate();
   const { logout } = useAuth()
   const handleLogout = () => {
     console.log('Logging out...');
     localStorage.removeItem('account');
     logout();
-    router.push('/login');
+    navigate('/login');
   };
 
   const changeAccount = (account: string) => {

@@ -1,7 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link, useNavigate } from 'react-router-dom'
 import { MnemonicInput } from '@/components/display'
 import { useAuth } from '@/context/auth'
 import { chainManager, ChainCurrency } from '@/lib/chain'
@@ -13,7 +12,7 @@ export default function Login() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { login } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate()
 
   // 用 useEffect 读取 URL 查询参数，保证 window 对象存在
   useEffect(() => {
@@ -31,7 +30,7 @@ export default function Login() {
       chainManager.generateWallet(realMnemonic, ChainCurrency.ETH).then((wallet) => {
         const user = login(undefined, realMnemonic, wallet, nickName)
         localStorage.setItem('account', user.account)
-        router.push('/')
+        navigate('/')
       })
     } catch (error) {
       console.error('登录失败:', error)
@@ -64,7 +63,7 @@ export default function Login() {
 
       <br />
       <br />
-      <Link href="/register">
+      <Link to="/register">
         <span className="text-black cursor-pointer hover:text-blue-800">没有钱包？申请一个</span>
       </Link>
     </div>

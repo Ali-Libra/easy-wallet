@@ -6,7 +6,7 @@ import { chainManager, ChainCurrency } from '@/lib/chain';
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import { hexToUint8Array } from '@/lib/util';
 
-export default function SendTransaction() {
+export default function Send() {
   const [toAddress, setToAddress] = useState<string>('');
   const [sendAmount, setSendAmount] = useState<string>('');
   const [status, setStatus] = useState<string>('');

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { ethers } from 'ethers'
-import Link from 'next/link';
+import { Link } from 'react-router-dom'
 
 import {MnemonicDisplay} from '@/components/display'
 
@@ -38,7 +38,7 @@ export default function Register() {
       (
       <div>
         <span className="w-full text-center text-gray-500 mt-4 block">确保已经将助记词记录在密码本或纸上，如果遗忘将无法找回!</span>
-        <Link href={{pathname:"/login", query: {mnemonic: mnemonic}}}  className="w-full text-center text-gray-500 mt-4 block" >
+        <Link to={{pathname:"/login", search: `?mnemonic=${encodeURIComponent(mnemonic)}`}}  className="w-full text-center text-gray-500 mt-4 block" >
               <span>{status}</span>
         </Link>
       </div>)}
