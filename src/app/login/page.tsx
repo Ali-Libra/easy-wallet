@@ -1,15 +1,15 @@
 'use client'
-import { useState } from 'react'
-import { ethers, HDNodeWallet } from 'ethers'
+import { useState, useRef } from 'react'
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MnemonicInput } from '@/components/display';
 
 import {useAuth} from '@/context/auth';
-import { addressManager, ChainCurrency } from '@/lib/address';
+import { chainManager, ChainCurrency } from '@/lib/chain';
 export default function Login() {
   const [mnemonic, setMnemonic] = useState<string>('');
   const [status, setStatus] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {login} = useAuth();
 
@@ -19,9 +19,13 @@ export default function Login() {
   
   const handleLogin = () => {
     try {
+      let nickName = ""
+      if (inputRef.current) {
+        nickName = inputRef.current.value
+      }
       const realMnemonic = mnemonicParam?mnemonicParam:mnemonic
-      addressManager.generateWallet(realMnemonic, ChainCurrency.ETH).then((wallet) =>{
-        const user = login(undefined, realMnemonic, wallet)
+      chainManager.generateWallet(realMnemonic, ChainCurrency.ETH).then((wallet) =>{
+        const user = login(undefined, realMnemonic, wallet, nickName)
         localStorage.setItem('account', user.account)
         router.push('/')
       })
@@ -38,6 +42,12 @@ export default function Login() {
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold text-center mb-6">使用助记词登录</h2>
+      {/* <input
+        ref={inputRef}
+        type="text"
+        placeholder="输入账号昵称"
+        className="w-full border border-gray-300 rounded-md p-2 mb-4"
+      /> */}
       <MnemonicInput count={12} 
         {...(mnemonicParam ? { initialValues: mnemonicParam } : undefined)}
         onChange={handleMnemonicChange}/>

@@ -20,12 +20,21 @@ export enum ChainCurrency {
   SOLANA = 'SOL'
 }
 
+export enum ChainType {
+  ETH = 'Ethereum',
+  ETH_TEST = 'Sepolia',
+  SOLANA = 'Solana',
+  SOLANA_TEST = 'Solana-dev',
+  BNB = 'BNB',
+  BNB_TEST = 'BNB-test'
+}
+
 let alchemyUrl = "https://{domain}.g.alchemy.com/v2/{key}"
 const SELF_DOMAIN_KEY = "selfDomain:"
 const HISTORY_KEY = "history:"
 
 // 地址管理器类
-class AddressManager {
+class ChainManager {
   private addressMap: Map<string, AddressInfo>;
 
   constructor(initialData?: AddressInfo[]) {
@@ -52,7 +61,7 @@ class AddressManager {
     const address = this.addressMap.get(name)
     if (address) {
       address.selfDomain = domain
-      localStorage.setItem(SELF_DOMAIN_KEY+name, domain);
+      localStorage.setItem(SELF_DOMAIN_KEY + name, domain);
     }
   }
 
@@ -72,7 +81,7 @@ class AddressManager {
         address.history = [];
       }
       insertWithLimit(address.history, history)
-      localStorage.setItem(HISTORY_KEY+name, JSON.stringify(address.history));
+      localStorage.setItem(HISTORY_KEY + name, JSON.stringify(address.history));
     }
   }
 
@@ -82,8 +91,8 @@ class AddressManager {
   }
 
   getHistroyByName(name: string): string[] | undefined {
-    const address =  this.addressMap.get(name);
-    if(address) {
+    const address = this.addressMap.get(name);
+    if (address) {
       return address.history;
     }
     return undefined;
@@ -151,11 +160,11 @@ class AddressManager {
   }
 }
 
-export const addressManager = new AddressManager([
-  { name: "Ethereum", useLib: ChainCurrency.ETH, isTest: false, avatar: "/dogdog.png", domain: "eth-mainnet" },
-  { name: "Sepolia", useLib: ChainCurrency.ETH, isTest: true, avatar: "/dogdog.png", domain: "eth-sepolia" },
-  { name: "Solana", useLib: ChainCurrency.SOLANA, isTest: false, avatar: "/dogdog.png", domain: "solana-mainnet" },
-  { name: "Solana-dev", useLib: ChainCurrency.SOLANA, isTest: true, avatar: "/dogdog.png", domain: "solana-devnet" },
-  { name: "BNB", useLib: ChainCurrency.ETH, isTest: false, avatar: "/dogdog.png", domain: "bnb-mainnet" },
-  { name: "BNB-test", useLib: ChainCurrency.ETH, isTest: true, avatar: "/dogdog.png", domain: "bnb-testnet" }
+export const chainManager = new ChainManager([
+  { name: ChainType.ETH, useLib: ChainCurrency.ETH, isTest: false, avatar: "/dogdog.png", domain: "eth-mainnet" },
+  { name: ChainType.ETH_TEST, useLib: ChainCurrency.ETH, isTest: true, avatar: "/dogdog.png", domain: "eth-sepolia" },
+  { name: ChainType.SOLANA, useLib: ChainCurrency.SOLANA, isTest: false, avatar: "/dogdog.png", domain: "solana-mainnet" },
+  { name: ChainType.SOLANA_TEST, useLib: ChainCurrency.SOLANA, isTest: true, avatar: "/dogdog.png", domain: "solana-devnet" },
+  { name: ChainType.BNB, useLib: ChainCurrency.ETH, isTest: false, avatar: "/dogdog.png", domain: "bnb-mainnet" },
+  { name: ChainType.BNB_TEST, useLib: ChainCurrency.ETH, isTest: true, avatar: "/dogdog.png", domain: "bnb-testnet" }
 ]);

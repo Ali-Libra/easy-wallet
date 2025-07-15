@@ -1,15 +1,17 @@
 import '@app/globals.css'
 import React, { createContext, useContext, useState, ReactNode, FC, JSX } from 'react';
 import {User, userManager} from '@lib/user'
+import { ChainType } from '@/lib/chain';
 
 interface AuthContextType {
   user: User | undefined;
   wallet: Wallet | undefined,
-  login: (user: User|undefined, mnemonic: string, wallet: Wallet) => User;
+  login: (user: User|undefined, mnemonic: string, wallet: Wallet, accountName?:string) => User;
   logout: () => void;
   urlKey: string;
   setUrlKey: (key: string) => void;
   shortWallet: () => JSX.Element | string;
+  changeName: (name: string) => void;
 }
 
 export type Wallet = {
@@ -26,13 +28,16 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [wallet, setWallet] = useState<Wallet | undefined>(undefined)
   const [user, setUser] = useState<User | undefined>(undefined)
   const [urlKey, setUrlKey] = useState("")
-  const login = (user: User|undefined, mnemonic: string, wallet: Wallet) : User => {
+  const login = (user: User|undefined, mnemonic: string, wallet: Wallet, accountName?:string) : User => {
     let localUser = user
     if(localUser === undefined) {
       localUser = {
         mnemonic: mnemonic,
         account: "account" + (userManager.size()+1),
-        chain: "Ethereum"
+        chain: ChainType.ETH
+      }
+      if (accountName !== undefined && accountName.length > 0) {
+        localUser.account = accountName
       }
       userManager.saveUser(localUser)
     }
@@ -45,6 +50,15 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setWallet(undefined)
     setUser(undefined)
   };
+
+  const changeName = (name: string) => {
+    if (user === undefined) return;
+    userManager.deleteUser(user.account)
+    user.account = name
+    userManager.saveUser(user)
+    setUser(user)
+    localStorage.setItem('account', name);
+  }
 
   const shortWallet = (): JSX.Element | string => {
     if (wallet === undefined) return '';
@@ -66,7 +80,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       logout, 
       user,
       shortWallet,
-      urlKey,setUrlKey}}>
+      urlKey,setUrlKey,
+      changeName}}>
       {children}
     </AuthContext.Provider>
   );

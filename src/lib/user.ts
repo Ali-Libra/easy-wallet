@@ -27,6 +27,11 @@ export class UserManager {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.cache));
     }
 
+    deleteUser(account: string) {
+        this.ensureLoaded();
+        delete this.cache[account];
+        this.saveToStorage();
+    }
     // 添加或更新用户
     saveUser(user: User) {
         this.ensureLoaded();

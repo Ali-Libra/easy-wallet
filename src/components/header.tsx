@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 
 import {useAuth} from '@/context/auth';
 import Logged from './logged';
-import {addressManager} from '@/lib/address';
+import {chainManager, ChainType} from '@/lib/chain';
 import { userManager } from '@/lib/user';
 import { isNotEmpty } from '@/lib/util';
 import { ethers } from "ethers";
@@ -19,8 +19,8 @@ export default function Header() {
     const account = localStorage.getItem('account');
     const user = isNotEmpty(account) ? userManager.getUserById(account) : undefined;
     if(user) {
-      const lib = addressManager.getLibByName(user.chain)
-      addressManager.generateWallet(user.mnemonic, lib).then((wallet) =>{
+      const lib = chainManager.getLibByName(user.chain)
+      chainManager.generateWallet(user.mnemonic, lib).then((wallet) =>{
         login(user, user.mnemonic, wallet)
         router.push('/');
         return
@@ -28,8 +28,8 @@ export default function Header() {
     }
 
     router.push("/login");
-    addressManager.initSelfDomain();
-    addressManager.initSendHistory();
+    chainManager.initSelfDomain();
+    chainManager.initSendHistory();
   }, []);
   
   const [copySuccess, setCopySuccess] = useState('')
@@ -84,10 +84,10 @@ export default function Header() {
               style={{ backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }}
             ></button>
             <select className=" text-white font-mono rounded-2xl px-0.5 py-0.5 ml-2"
-              value={user ? user.chain : 'Ethereum'}
+              value={user ? user.chain : ChainType.ETH}
               onChange={(e) => changeChain(e.target.value)}
             >
-              {addressManager.getAll().map((address, idx) => (
+              {chainManager.getAll().map((address, idx) => (
                 <option
                   key={address.name || idx}
                   value={address.name}

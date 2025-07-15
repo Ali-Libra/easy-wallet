@@ -1,23 +1,24 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/context/auth';
-import { addressManager } from '@/lib/address';
+import { chainManager } from '@/lib/chain';
 
 type ModalInputProps = {
     showText?: boolean;         // 外部控制是否显示弹窗
     defaultValues?: string[]; // 默认输入值（可选）
 };
 
-export default function ModalInput({ showText = true}: ModalInputProps) {
+export default function ModalInput({ showText = true }: ModalInputProps) {
     const [show, setShow] = useState(false);
     const [inputs, setInputs] = useState<string[]>([]);
-    const {setUrlKey} = useAuth()
+    const { setUrlKey, changeName } = useAuth()
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const titles = ["alchemy"];
     useEffect(() => {
         setShow(true); // 当外部 open 变化时，更新显示状态
 
-        const addressList = addressManager.getAll();
+        const addressList = chainManager.getAll();
         const totalLength = titles.length + addressList.length;
         const newInputs: string[] = Array(totalLength).fill("");
 
@@ -30,8 +31,8 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
             }
         });
         addressList.forEach((address, index) => {
-            if(address.selfDomain) {
-                newInputs[titles.length+index] = address.selfDomain;
+            if (address.selfDomain) {
+                newInputs[titles.length + index] = address.selfDomain;
                 setShow(false)
             }
         });
@@ -46,24 +47,32 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
         setInputs(newInputs);
     };
 
+    const handleChangeName = () => {
+        if (!inputRef.current || 
+            inputRef.current.value == "") {
+            return;
+        }
+        changeName(inputRef.current.value)
+        alert("修改成功")   
+    };
     const handleConfirm = (index: number) => {
-        if(inputs[index] === "") return;
+        if (inputs[index] === "") return;
         localStorage.setItem(titles[index], inputs[index]);
         setUrlKey(inputs[index])
     };
 
     const handleConfirmSelfDomain = (index: number, name: string) => {
-        addressManager.setSelfDomain(name, inputs[index])
+        chainManager.setSelfDomain(name, inputs[index])
     };
 
     return (
         <div className="p-1">
             {/* 可选：点击按钮手动打开 */}
-            {showText&&<button
+            {showText && <button
                 onClick={() => setShow(true)}
                 className="w-full text-center text-gray-700 hover:bg-gray-200 rounded p-1"
             >
-                编辑地址
+                设置
             </button>}
 
             {show && (
@@ -78,6 +87,22 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
                             ×
                         </button>
                         <div className="mt-5" />
+
+                        <div className="flex items-center justify-center mb-4 gap-2">
+                            <div className="w-18 text-black">昵称</div>
+                            <input
+                                ref={inputRef}
+                                className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
+                                placeholder="设置新昵称"
+                            />
+                            <div className="mt-0.5" />
+                            <button
+                                onClick={() => handleChangeName()}
+                                className="px-3 py-1 rounded bg-[var(--btn)] hover-[var(--btn-hover)] text-[var(--btn-text)]"
+                            >
+                                确认
+                            </button>
+                        </div>
 
                         {/* 设置访问ID */}
                         {titles.map((title, index) => (
@@ -102,17 +127,17 @@ export default function ModalInput({ showText = true}: ModalInputProps) {
                             自定义访问域名
                         </h2>
                         {/* 设置自定义访问域名 */}
-                        {addressManager.getAll().map((address, index) => (
+                        {chainManager.getAll().map((address, index) => (
                             <div key={index} className="flex items-center justify-center mb-4 gap-2">
                                 <div className="w-18 text-black">{address.name}</div>
                                 <input
-                                    value={inputs[titles.length+index]}
-                                    onChange={(e) => handleInputChange(titles.length+index, e.target.value)}
+                                    value={inputs[titles.length + index]}
+                                    onChange={(e) => handleInputChange(titles.length + index, e.target.value)}
                                     className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black"
                                 />
                                 <div className="mt-0.5" />
                                 <button
-                                    onClick={() => handleConfirmSelfDomain(titles.length+index, address.name)}
+                                    onClick={() => handleConfirmSelfDomain(titles.length + index, address.name)}
                                     className="px-3 py-1 rounded bg-[var(--btn)] hover-[var(--btn-hover)] text-[var(--btn-text)]"
                                 >
                                     确认

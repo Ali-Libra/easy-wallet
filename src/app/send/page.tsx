@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { useAuth } from '@/context/auth';
-import { addressManager, ChainCurrency } from '@/lib/address';
+import { chainManager, ChainCurrency } from '@/lib/chain';
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import { hexToUint8Array } from '@/lib/util';
 
@@ -18,7 +18,7 @@ export default function SendTransaction() {
     if (!user) {
       return
     }
-    const oldHistory = addressManager.getHistroyByName(user.chain)
+    const oldHistory = chainManager.getHistroyByName(user.chain)
     setHistory(oldHistory)
   })
 
@@ -38,7 +38,7 @@ export default function SendTransaction() {
       return
     }
 
-    const [url, currency] = addressManager.getUrlByName(user.chain, urlKey)
+    const [url, currency] = chainManager.getUrlByName(user.chain, urlKey)
     if (!url) {
       setStatus('请先登录钱包')
       return
@@ -76,8 +76,8 @@ export default function SendTransaction() {
       }
 
       setSending(false)
-      addressManager.addSendHistory(user.chain, toAddress)
-      setHistory(addressManager.getHistroyByName(user.chain))
+      chainManager.addSendHistory(user.chain, toAddress)
+      setHistory(chainManager.getHistroyByName(user.chain))
     } catch (error: any) {
       setStatus(`发送失败：${error.message}`);
       setSending(false)
