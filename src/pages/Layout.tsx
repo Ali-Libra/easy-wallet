@@ -1,7 +1,5 @@
-'use client'
 import '@/globals.css'
 
-import {AuthProvider} from '@/context/auth';
 import Header from '@/components/header';
 
 export default function Layout() {

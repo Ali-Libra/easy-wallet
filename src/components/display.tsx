@@ -1,4 +1,4 @@
-'use client'
+
 import React, { useState, useEffect } from 'react'
 
 // 显示助记词的组件（只读）

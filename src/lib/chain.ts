@@ -1,7 +1,7 @@
 import { format, insertWithLimit } from "@lib/util";
-import * as bip39 from 'bip39';
-import { derivePath as deriveEd25519 } from 'ed25519-hd-key';
-import { Keypair as SolanaKeypair } from '@solana/web3.js';
+import * as bip39 from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english'
+import { Keypair } from "@solana/web3.js";
 import { ethers } from 'ethers';
 
 // 定义一个地址信息结构体
@@ -130,21 +130,22 @@ class ChainManager {
     address: string;
     privateKey: string;
   }> {
-    if (!bip39.validateMnemonic(mnemonic)) {
+    if (!bip39.validateMnemonic(mnemonic, wordlist)) {
+      console.log('无效的助记词', mnemonic);
       throw new Error('无效的助记词');
     }
 
     const seed = await bip39.mnemonicToSeed(mnemonic);
-
     if (chain === ChainCurrency.SOLANA) {
-      // Solana 使用 ed25519，派生路径为 m/44'/501'/index'/0'
-      const derivationPath = `m/44'/501'/${index}'/0'`;
-      const { key } = deriveEd25519(derivationPath, seed.toString('hex'));
-      const keypair = SolanaKeypair.fromSeed(key);
+      const seed32 = seed.slice(0, 32)
+      const keypair = Keypair.fromSeed(seed32)
+      const privateKeyHex = [...keypair.secretKey]
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('')
       return {
         address: keypair.publicKey.toBase58(),
-        privateKey: Buffer.from(keypair.secretKey).toString('hex'), // 64字节
-      };
+        privateKey: privateKeyHex,
+      }
     }
 
     if (chain === ChainCurrency.ETH) {
