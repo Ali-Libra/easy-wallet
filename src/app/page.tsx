@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { ethers, formatEther } from 'ethers'
-import { Connection, LAMPORTS_PER_SOL, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 
 import { useAuth } from '@/context/auth';
 import { chainManager, ChainCurrency } from '@/lib/chain';

@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import {MnemonicDisplay} from '@/components/display'
 

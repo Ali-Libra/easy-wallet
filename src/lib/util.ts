@@ -45,7 +45,7 @@ export const clickCopy = async (txt: string) => {
   }
 }
 
-export function format(template: string, values: Record<string, any>): string {
+export function format(template: string, values: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (_, key) => {
     return values[key] !== undefined ? values[key].toString() : `{${key}}`;
   });

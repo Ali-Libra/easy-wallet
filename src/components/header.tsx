@@ -8,7 +8,6 @@ import Logged from './logged';
 import {chainManager, ChainType} from '@/lib/chain';
 import { userManager } from '@/lib/user';
 import { isNotEmpty } from '@/lib/util';
-import { ethers } from "ethers";
 
 export default function Header() {
   const router = useRouter();

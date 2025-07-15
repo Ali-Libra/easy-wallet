@@ -33,7 +33,7 @@ class Erc20Manager {
     const checkedUser = ethers.getAddress(userAddress);
     const contract = new ethers.Contract(checkedToken, ERC20_ABI, provider);
 
-    const [symbol, decimals, balance] = await Promise.all([
+    const [_, decimals, balance] = await Promise.all([
       contract.symbol(),
       contract.decimals(),
       contract.balanceOf(checkedUser),

@@ -29,7 +29,7 @@ export enum ChainType {
   BNB_TEST = 'BNB-test'
 }
 
-let alchemyUrl = "https://{domain}.g.alchemy.com/v2/{key}"
+const alchemyUrl = "https://{domain}.g.alchemy.com/v2/{key}"
 const SELF_DOMAIN_KEY = "selfDomain:"
 const HISTORY_KEY = "history:"
 
@@ -49,7 +49,7 @@ class ChainManager {
   }
 
   initSelfDomain() {
-    for (const [name, address] of this.addressMap) {
+    for (const [_, address] of this.addressMap) {
       const saveDomain = localStorage.getItem(SELF_DOMAIN_KEY + address.name)
       if (saveDomain) {
         address.selfDomain = saveDomain
@@ -66,7 +66,7 @@ class ChainManager {
   }
 
   initSendHistory() {
-    for (const [name, address] of this.addressMap) {
+    for (const [_, address] of this.addressMap) {
       const raw = localStorage.getItem(HISTORY_KEY + address.name)
       if (raw) {
         address.history = JSON.parse(raw)

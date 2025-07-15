@@ -46,7 +46,7 @@ export default function Logged() {
 
   //退出按钮逻辑
   const router = useRouter();
-  const { logout, login } = useAuth()
+  const { logout } = useAuth()
   const handleLogout = () => {
     console.log('Logging out...');
     localStorage.removeItem('account');
@@ -85,7 +85,7 @@ export default function Logged() {
           </button>
           {expanded && (
             Object.entries(userManager.getAllUsers())
-              .filter(([key, user1]) => user1.account !== user?.account)
+              .filter(([_, user1]) => user1.account !== user?.account)
               .map(([key, user]) => (
                 <button
                   key={key}
