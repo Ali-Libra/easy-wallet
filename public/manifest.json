@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Easy Wallet",
+  "version": "1.0.0",
+  "description": "A very easy web3 wallet but use friendly",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "dogdog.png",
+      "48": "dogdog.png",
+      "128": "dogdog.png"
+    }
+  },
+  "permissions": [],
+  "icons": {
+    "16": "dogdog.png",
+    "48": "dogdog.png",
+    "128": "dogdog.png"
+  }
+}

@@ -1,5 +1,5 @@
 // src/App.tsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -9,7 +9,7 @@ import { AuthProvider } from './context/auth'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <div className="min-h-screen bg-gray-100 flex flex-col">
           <Header />
@@ -23,6 +23,6 @@ export default function App() {
           </main>
         </div>
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
