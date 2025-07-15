@@ -20,7 +20,7 @@ export default function SendTransaction() {
     }
     const oldHistory = chainManager.getHistroyByName(user.chain)
     setHistory(oldHistory)
-  })
+  },[])
 
   const sendTransaction = async () => {
     if (sending) {
