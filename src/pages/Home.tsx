@@ -66,14 +66,14 @@ export default function Home() {
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
       <ModalInput showText={false}></ModalInput>
-      <h2 className="text-2xl font-bold text-center mb-6">钱包信息</h2>
+      {/* <h2 className="text-2xl font-bold text-center mb-6">钱包信息</h2> */}
 
       {user && (
         <div className="text-center">
           {/* <p>钱包地址：<span className="font-mono">{loggedWallet.address}</span></p> */}
           <button
             onClick={getBalance}
-            className="mt-4 w-full py-2 rounded-md bg-[var(--btn)] hover-[var(--btn-hover)] text-[var(--btn-text)]"
+            className="mt-2 w-full py-2 rounded-md bg-[var(--btn)] hover-[var(--btn-hover)] text-[var(--btn-text)]"
           >
             获取余额
           </button>

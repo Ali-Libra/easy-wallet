@@ -86,7 +86,7 @@ export default function Send() {
 
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">发送</h2>
+      {/* <h2 className="text-2xl font-bold text-center mb-6">发送</h2> */}
 
       <input
         list="history-addresses"
@@ -114,7 +114,7 @@ export default function Send() {
 
       <button
         onClick={sendTransaction}
-        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        className="w-full  py-2 rounded-md bg-[var(--btn)] hover-[var(--btn-hover)] text-[var(--btn-text)]"
       >
         {sending ? '发送中' : '发送'}
       </button>

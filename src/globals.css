@@ -2,13 +2,13 @@
 
 :root {
   --header-tmp: #f1a960;
-  --header: #f1a960;
+  --header: #61d8c4;
   --body: #fafafb;
   --text: #000000;
   --text-notice: #364153;
   --select: #e5e7eb;
-  --btn: #155dfc;
-  --btn-hover: #1447e6;
+  --btn: #61d8c4;
+  --btn-hover: #61d8c4;
   --btn-text: #ffffff;
 }
 
