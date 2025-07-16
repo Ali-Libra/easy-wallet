@@ -81,7 +81,7 @@ export default function Home() {
       )}
 
       {balance && (
-        <div className="text-center text-gray-700 mt-4">
+        <div className="text-base text-center text-gray-700 mt-4">
           <p>{balance} {currency}</p>
           {erc20InfoList?.map((info) => (
             <p key={info.name}>{info.value ?? 0.0} {info.name}</p>

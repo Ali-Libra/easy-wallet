@@ -56,7 +56,7 @@ export default function Header() {
   }
   // bg-gray-400
   return (
-    <header className="px-6 py-3 bg-[var(--header)] text-[var(--text)]">
+    <header className="px-6 py-2 text-[var(--text)] bg-[var(--header)] border-b border-gray-300">
       <div className="flex justify-between items-center">
         {/* 左侧 */}
         <div className="space-x-7 flex items-center">
@@ -69,11 +69,11 @@ export default function Header() {
             <span className="font-mono text-base">{shortWallet()}</span>
             <button onClick={handleCopy}
               className="w-4 h-4 bg-cover bg-center"
-              style={{ backgroundImage: `url(${!copySuccess ? '/copy_white.png' : '/copy_success_white.png'})` }}
+              style={{ backgroundImage: `url(${!copySuccess ? '/copy.png' : '/copy_success.png'})` }}
             ></button>
           </div>
           <select
-            className="py-1 px-1 inline-block w-auto bg-indigo-600 text-white font-mono rounded-2xl"
+            className="py-1 px-1 inline-block w-auto bg-[var(--select)] text-black text-sm font-mono rounded-xl shadow-sm"
             value={user ? user.chain : ChainType.ETH}
             onChange={(e) => changeChain(e.target.value)}
           >
@@ -81,7 +81,7 @@ export default function Header() {
               <option
                 key={address.name || idx}
                 value={address.name}
-                className="bg-indigo-600 text-white"
+                className="text-black"
               >
                 {address.name}
               </option>

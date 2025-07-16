@@ -9,7 +9,7 @@ import Header from './components/header'
 export default function App() {
   return (
     <HashRouter>
-        <div className="min-h-screen bg-gray-100 flex flex-col">
+        <div className="min-h-screen bg-[var(--body)] flex flex-col">
           <Header />
           <main className="flex-grow p-6">
             <Routes>
