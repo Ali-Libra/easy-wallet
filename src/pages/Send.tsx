@@ -86,7 +86,7 @@ export default function Send() {
 
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <h2 className="text-3xl font-bold text-center mb-6">发送</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">发送</h2>
 
       <input
         list="history-addresses"

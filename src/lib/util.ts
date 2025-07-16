@@ -73,3 +73,18 @@ export function insertWithLimit<T>(arr: T[], item: T, maxLen = 10): T[] {
   }
   return arr;
 }
+
+export function setRootRem(designWidth = 375, baseFontSize = 16) {
+  const html = document.documentElement;
+  const updateFontSize = () => {
+    const width = html.clientWidth;
+    const scale = width / designWidth;
+    html.style.fontSize = `${baseFontSize * scale}px`;
+    
+    console.log("html.clientWidth", html.clientWidth, " scale", scale)
+  };
+
+  updateFontSize();
+  window.addEventListener('resize', updateFontSize);
+  window.addEventListener('orientationchange', updateFontSize);
+}
