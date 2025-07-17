@@ -79,12 +79,21 @@ export function setRootRem(designWidth = 375, baseFontSize = 16) {
   const updateFontSize = () => {
     const width = html.clientWidth;
     const scale = width / designWidth;
-    html.style.fontSize = `${baseFontSize * scale}px`;
-    
-    console.log("html.clientWidth", html.clientWidth, " scale", scale)
+
+    const exponent = getExponent(scale);
+    const adjustedScale = Math.pow(scale, exponent);
+    html.style.fontSize = `${baseFontSize * adjustedScale}px`;
   };
 
   updateFontSize();
   window.addEventListener('resize', updateFontSize);
   window.addEventListener('orientationchange', updateFontSize);
+}
+
+function getExponent(scale: number): number {
+  if (scale < 1.5) return 0.8;
+  if (scale < 2) return 0.7;
+  if (scale < 2.5) return 0.6;
+  if (scale < 3) return 0.7;
+  return 0.4;
 }
