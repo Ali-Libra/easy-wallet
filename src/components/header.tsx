@@ -69,7 +69,7 @@ export default function Header() {
             <span className="font-mono text-base">{shortWallet()}</span>
             <button onClick={handleCopy}
               className="w-4 h-4 bg-cover bg-center"
-              style={{ backgroundImage: `url(${!copySuccess ? '/copy.png' : '/copy_success.png'})` }}
+              style={{ backgroundImage: `url(${!copySuccess ? '/assets/copy.png' : '/assets/copy_success.png'})` }}
             ></button>
           </div>
           <select
