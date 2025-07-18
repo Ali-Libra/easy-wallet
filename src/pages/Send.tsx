@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { useAuth } from '@/context/auth';
-import { chainManager, ChainCurrency } from '@/lib/chain';
+import { chainManager, ChainClass } from '@/lib/chain';
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import { hexToUint8Array } from '@/lib/util';
 
@@ -38,14 +38,14 @@ export default function Send() {
       return
     }
 
-    const [url, currency] = chainManager.getUrlByName(user.chain, urlKey)
+    const [url, chainClass] = chainManager.getUrlByName(user.chain, urlKey)
     if (!url) {
       setStatus('请先登录钱包')
       return
     }
     try {
       setSending(true)
-      if (currency == ChainCurrency.ETH) {
+      if (chainClass == ChainClass.EVM) {
         const provider = new ethers.JsonRpcProvider(url);
         const newWallet = new ethers.Wallet(wallet.privateKey, provider)
         const tx = {
@@ -55,7 +55,7 @@ export default function Send() {
         const transaction = await newWallet.sendTransaction(tx)
         await transaction.wait()
         setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
-      } else if (currency == ChainCurrency.SOLANA) {
+      } else if (chainClass == ChainClass.SOLANA) {
         const connection = new Connection(url, 'confirmed')
         const from = Keypair.fromSecretKey(hexToUint8Array(wallet.privateKey))
         const to = new PublicKey(toAddress)

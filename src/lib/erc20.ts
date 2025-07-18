@@ -95,11 +95,6 @@ export const erc20Manager = new Erc20Manager([
   },
   {
     name: "USDT",
-    chain: ChainType.ETH_TEST,
-    address: "0x863aE464D7E8e6F95b845FD3AF0F9A2B2034d6dD",
-  },
-  {
-    name: "USDT",
     chain: ChainType.SOLANA,
     address: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
   },

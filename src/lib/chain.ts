@@ -7,18 +7,14 @@ import { ethers } from 'ethers';
 // 定义一个地址信息结构体
 export type AddressInfo = {
   name: string; //链的名字
+  useLib: ChainClass;
+  currency: ChainCurrnecy;
   avatar: string; // 头像
   domain: string; //链的地址
   isTest: boolean;
   selfDomain?: string; //自定义地址
-  useLib: ChainCurrency;
   history?: string[]; //交易历史
 };
-
-export enum ChainCurrency {
-  ETH = 'ETH',
-  SOLANA = 'SOL'
-}
 
 export enum ChainType {
   ETH = 'Ethereum',
@@ -26,7 +22,20 @@ export enum ChainType {
   SOLANA = 'Solana',
   SOLANA_TEST = 'Solana-dev',
   BNB = 'BNB',
-  BNB_TEST = 'BNB-test'
+  BNB_TEST = 'BNB-test',
+  MONAD_TEST = 'MONAD-test'
+}
+
+export enum ChainClass {
+  EVM = 'EVM',
+  SOLANA = 'SOL',
+}
+
+export enum ChainCurrnecy {
+  Ethereum = 'ETH',
+  SOLANA = 'SOL',
+  BNB = 'BNB',
+  MONAD = 'MON'
 }
 
 const alchemyUrl = "https://{domain}.g.alchemy.com/v2/{key}"
@@ -98,23 +107,23 @@ class ChainManager {
     return undefined;
   }
 
-  getUrlByName(name: string, urlKey: string): [string | undefined, ChainCurrency] {
+  getUrlByName(name: string, urlKey: string): [string | undefined, ChainClass, ChainCurrnecy] {
     const address = this.addressMap.get(name)
-    if (!address) return [undefined, ChainCurrency.ETH];
+    if (!address) return [undefined, ChainClass.EVM, ChainCurrnecy.Ethereum];
 
     if (address.selfDomain && address.selfDomain !== "") {
-      return [address.selfDomain, address.useLib]
+      return [address.selfDomain, address.useLib, address.currency]
     }
     const url = format(alchemyUrl, {
       domain: address.domain,
       key: urlKey,
     });
-    return [url, address.useLib];
+    return [url, address.useLib, address.currency];
   }
 
-  getLibByName(name: string): ChainCurrency {
+  getLibByName(name: string): ChainClass {
     const address = this.addressMap.get(name)
-    return address?.useLib || ChainCurrency.ETH;
+    return address?.useLib || ChainClass.EVM;
   }
 
   // 获取所有地址
@@ -124,7 +133,7 @@ class ChainManager {
 
   async generateWallet(
     mnemonic: string,
-    chain: ChainCurrency,
+    chain: ChainClass,
     index: number = 0
   ): Promise<{
     address: string;
@@ -136,7 +145,7 @@ class ChainManager {
     }
 
     const seed = await bip39.mnemonicToSeed(mnemonic);
-    if (chain === ChainCurrency.SOLANA) {
+    if (chain === ChainClass.SOLANA) {
       const seed32 = seed.slice(0, 32)
       const keypair = Keypair.fromSeed(seed32)
       const privateKeyHex = [...keypair.secretKey]
@@ -148,7 +157,7 @@ class ChainManager {
       }
     }
 
-    if (chain === ChainCurrency.ETH) {
+    if (chain === ChainClass.EVM) {
       // Ethereum 使用 BIP44 标准路径: m/44'/60'/index'/0/0
       const hdNode = ethers.HDNodeWallet.fromSeed(seed).derivePath(`m/44'/60'/${index}'/0/0`);
       return {
@@ -162,10 +171,32 @@ class ChainManager {
 }
 
 export const chainManager = new ChainManager([
-  { name: ChainType.ETH, useLib: ChainCurrency.ETH, isTest: false, avatar: "/dogdog.png", domain: "eth-mainnet" },
-  { name: ChainType.ETH_TEST, useLib: ChainCurrency.ETH, isTest: true, avatar: "/dogdog.png", domain: "eth-sepolia" },
-  { name: ChainType.SOLANA, useLib: ChainCurrency.SOLANA, isTest: false, avatar: "/dogdog.png", domain: "solana-mainnet" },
-  { name: ChainType.SOLANA_TEST, useLib: ChainCurrency.SOLANA, isTest: true, avatar: "/dogdog.png", domain: "solana-devnet" },
-  { name: ChainType.BNB, useLib: ChainCurrency.ETH, isTest: false, avatar: "/dogdog.png", domain: "bnb-mainnet" },
-  { name: ChainType.BNB_TEST, useLib: ChainCurrency.ETH, isTest: true, avatar: "/dogdog.png", domain: "bnb-testnet" }
+  {
+    name: ChainType.ETH, useLib: ChainClass.EVM, currency: ChainCurrnecy.Ethereum,
+    isTest: false, avatar: "/dogdog.png", domain: "eth-mainnet"
+  },
+  {
+    name: ChainType.ETH_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.Ethereum,
+    isTest: true, avatar: "/dogdog.png", domain: "eth-sepolia"
+  },
+  {
+    name: ChainType.MONAD_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.MONAD,
+    isTest: true, avatar: "/monad-testnet.svg", domain: "monad-testnet"
+  },
+  {
+    name: ChainType.SOLANA, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
+    isTest: false, avatar: "/dogdog.png", domain: "solana-mainnet"
+  },
+  {
+    name: ChainType.SOLANA_TEST, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
+    isTest: true, avatar: "/dogdog.png", domain: "solana-devnet"
+  },
+  {
+    name: ChainType.BNB, useLib: ChainClass.EVM, currency:ChainCurrnecy.BNB,
+    isTest: false, avatar: "/dogdog.png", domain: "bnb-mainnet"
+  },
+  {
+    name: ChainType.BNB_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.BNB,
+    isTest: true, avatar: "/dogdog.png", domain: "bnb-testnet"
+  }
 ]);

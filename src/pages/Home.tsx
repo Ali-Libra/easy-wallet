@@ -3,7 +3,7 @@ import { ethers, formatEther } from 'ethers'
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 
 import { useAuth } from '@/context/auth';
-import { chainManager, ChainCurrency } from '@/lib/chain';
+import { chainManager, ChainClass } from '@/lib/chain';
 import ModalInput from '@/components/modalInput';
 import { Erc20Info, erc20Manager } from '@/lib/erc20';
 
@@ -11,7 +11,7 @@ export default function Home() {
   const { wallet, user, urlKey } = useAuth();
   const [balance, setBalance] = useState('')
   const [status, setStatus] = useState('')
-  const [currency, setCurrency] = useState(ChainCurrency.ETH)
+  const [currency, setCurrency] = useState("ETH")
   const [erc20InfoList, setErc20InfoList] = useState<Erc20Info[] | undefined>();
 
   useEffect(() => {
@@ -30,14 +30,14 @@ export default function Home() {
       alert("没有请求key")
       return;
     }
-    const [url, curr] = chainManager.getUrlByName(user.chain, urlKey)
+    const [url, chainClass, currency] = chainManager.getUrlByName(user.chain, urlKey)
     if (!url) {
       return
     }
-    setCurrency(curr)
+    setCurrency(currency)
     console.log("chain:", user.chain, ", url:", url)
 
-    if (curr == ChainCurrency.ETH) {
+    if (chainClass == ChainClass.EVM) {
       const provider = new ethers.JsonRpcProvider(url)
       const balance = await provider.getBalance(wallet.address)
       setBalance(formatEther(balance))
@@ -46,7 +46,7 @@ export default function Home() {
           info.value = balance
         })
       })
-    } else if (curr == ChainCurrency.SOLANA) {
+    } else if (chainClass == ChainClass.SOLANA) {
       const connection = new Connection(url, 'confirmed');
       const publicKey = new PublicKey(wallet.address);
       const balance = await connection.getBalance(publicKey);
