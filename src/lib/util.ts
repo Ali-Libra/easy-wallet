@@ -98,3 +98,71 @@ function getExponent(scale: number): number {
   if (scale < 3) return 0.3;
   return 0.3;
 }
+
+interface IntervalTaskOptions {
+  task: () => Promise<boolean> | boolean
+  interval: number
+  immediate?: boolean
+  active?: boolean
+  backoffFactor?: number
+  maxInterval?: number
+}
+
+export interface IntervalTaskController {
+  stop: () => void
+  restart: () => void
+}
+
+export function startIntervalTask(options: IntervalTaskOptions): IntervalTaskController {
+  const {
+    task,
+    interval,
+    immediate = false,
+    active = true,
+    backoffFactor = 1.1,
+    maxInterval = 60000,
+  } = options
+
+  let currentInterval = interval
+  let cancelled = false
+  let timer: ReturnType<typeof setTimeout> | null = null
+
+  const run = async () => {
+    const result = await Promise.resolve(task())
+
+    if (cancelled) return
+
+    if (result === false) {
+      currentInterval = Math.min(currentInterval * backoffFactor, maxInterval)
+    } else {
+      currentInterval = interval
+    }
+
+    timer = setTimeout(run, currentInterval)
+  }
+
+  const start = () => {
+    cancelled = false
+    currentInterval = interval
+    if (immediate) run()
+    else timer = setTimeout(run, currentInterval)
+  }
+
+  const stop = () => {
+    cancelled = true
+    if (timer !== null) {
+      clearTimeout(timer)
+      timer = null
+    }
+  }
+
+  if (active) start()
+
+  return {
+    stop,
+    restart: () => {
+      stop()
+      start()
+    },
+  }
+}
