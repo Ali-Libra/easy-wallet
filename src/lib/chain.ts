@@ -189,11 +189,11 @@ export const chainManager = new ChainManager([
   },
   {
     name: ChainType.SOLANA_TEST, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
-    isTest: true, avatar: "/assets/assets/solana-testnet.svg", domain: "solana-devnet"
+    isTest: true, avatar: "/assets/solana-testnet.svg", domain: "solana-devnet"
   },
   {
     name: ChainType.BNB, useLib: ChainClass.EVM, currency:ChainCurrnecy.BNB,
-    isTest: false, avatar: "/assets/assets/bnb-mainnet.svg", domain: "bnb-mainnet"
+    isTest: false, avatar: "/assets/bnb-mainnet.svg", domain: "bnb-mainnet"
   },
   {
     name: ChainType.BNB_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.BNB,
