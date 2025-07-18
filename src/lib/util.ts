@@ -82,6 +82,7 @@ export function setRootRem(designWidth = 375, baseFontSize = 16) {
 
     const exponent = getExponent(scale);
     const adjustedScale = Math.pow(scale, exponent);
+    console.log('exponent', exponent,' scale ', scale, ' adjustedScale', adjustedScale);
     html.style.fontSize = `${baseFontSize * adjustedScale}px`;
   };
 
@@ -91,9 +92,9 @@ export function setRootRem(designWidth = 375, baseFontSize = 16) {
 }
 
 function getExponent(scale: number): number {
-  if (scale < 1.5) return 0.8;
-  if (scale < 2) return 0.7;
-  if (scale < 2.5) return 0.6;
-  if (scale < 3) return 0.7;
-  return 0.4;
+  if (scale < 1.5) return 0.5;
+  if (scale < 2) return 0.4;
+  if (scale < 2.5) return 0.3;
+  if (scale < 3) return 0.3;
+  return 0.3;
 }

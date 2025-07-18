@@ -107,18 +107,18 @@ class ChainManager {
     return undefined;
   }
 
-  getUrlByName(name: string, urlKey: string): [string | undefined, ChainClass, ChainCurrnecy] {
+  getUrlByName(name: string, urlKey: string): [string | undefined, AddressInfo|undefined] {
     const address = this.addressMap.get(name)
-    if (!address) return [undefined, ChainClass.EVM, ChainCurrnecy.Ethereum];
+    if (!address) return [undefined, undefined];
 
     if (address.selfDomain && address.selfDomain !== "") {
-      return [address.selfDomain, address.useLib, address.currency]
+      return [address.selfDomain, address]
     }
     const url = format(alchemyUrl, {
       domain: address.domain,
       key: urlKey,
     });
-    return [url, address.useLib, address.currency];
+    return [url, address];
   }
 
   getLibByName(name: string): ChainClass {
@@ -173,11 +173,11 @@ class ChainManager {
 export const chainManager = new ChainManager([
   {
     name: ChainType.ETH, useLib: ChainClass.EVM, currency: ChainCurrnecy.Ethereum,
-    isTest: false, avatar: "/dogdog.png", domain: "eth-mainnet"
+    isTest: false, avatar: "/eth-mainnet.svg", domain: "eth-mainnet"
   },
   {
     name: ChainType.ETH_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.Ethereum,
-    isTest: true, avatar: "/dogdog.png", domain: "eth-sepolia"
+    isTest: true, avatar: "/eth-testnet.svg", domain: "eth-sepolia"
   },
   {
     name: ChainType.MONAD_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.MONAD,
@@ -185,18 +185,18 @@ export const chainManager = new ChainManager([
   },
   {
     name: ChainType.SOLANA, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
-    isTest: false, avatar: "/dogdog.png", domain: "solana-mainnet"
+    isTest: false, avatar: "/solana-mainnet.svg", domain: "solana-mainnet"
   },
   {
     name: ChainType.SOLANA_TEST, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
-    isTest: true, avatar: "/dogdog.png", domain: "solana-devnet"
+    isTest: true, avatar: "/solana-testnet.svg", domain: "solana-devnet"
   },
   {
     name: ChainType.BNB, useLib: ChainClass.EVM, currency:ChainCurrnecy.BNB,
-    isTest: false, avatar: "/dogdog.png", domain: "bnb-mainnet"
+    isTest: false, avatar: "/bnb-mainnet.svg", domain: "bnb-mainnet"
   },
   {
     name: ChainType.BNB_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.BNB,
-    isTest: true, avatar: "/dogdog.png", domain: "bnb-testnet"
+    isTest: true, avatar: "/bnb-testnet.svg", domain: "bnb-testnet"
   }
 ]);

@@ -38,14 +38,14 @@ export default function Send() {
       return
     }
 
-    const [url, chainClass] = chainManager.getUrlByName(user.chain, urlKey)
-    if (!url) {
+    const [url, chain] = chainManager.getUrlByName(user.chain, urlKey)
+    if (!url || !chain) {
       setStatus('请先登录钱包')
       return
     }
     try {
       setSending(true)
-      if (chainClass == ChainClass.EVM) {
+      if (chain.useLib == ChainClass.EVM) {
         const provider = new ethers.JsonRpcProvider(url);
         const newWallet = new ethers.Wallet(wallet.privateKey, provider)
         const tx = {
@@ -55,7 +55,7 @@ export default function Send() {
         const transaction = await newWallet.sendTransaction(tx)
         await transaction.wait()
         setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
-      } else if (chainClass == ChainClass.SOLANA) {
+      } else if (chain.useLib == ChainClass.SOLANA) {
         const connection = new Connection(url, 'confirmed')
         const from = Keypair.fromSecretKey(hexToUint8Array(wallet.privateKey))
         const to = new PublicKey(toAddress)

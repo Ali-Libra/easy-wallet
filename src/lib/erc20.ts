@@ -13,7 +13,6 @@ export type Erc20Info = {
   name: string;
   chain: ChainType;
   address: string;
-  value?: string;
 };
 
 class Erc20Manager {
@@ -79,6 +78,16 @@ class Erc20Manager {
 
   getByName(chain: string): Erc20Info[] | undefined {
     return this.erc20List.filter((info) => info.chain === chain);
+  }
+
+  getAvatar(name: string): string {
+    if (name === "USDT") {
+      return "/USDT.png";
+    } else if (name === "USDC") {
+      return "/USDC.png";
+    } else {
+      return "/dogdog.png"
+    }
   }
 }
 
