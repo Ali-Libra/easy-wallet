@@ -111,15 +111,16 @@ export default function Home() {
         return { ...prev, ...newMap }
       })
 
-      if (!hasChanged) {
-        console.log('数据未变化')
-        return false
-      }
-
+      //数据未变化也得提示下更新
       setStatus('数据已更新')
       setTimeout(() => {
         setStatus('')
       }, 1500)
+
+      if (!hasChanged) {
+        console.log('数据未变化')
+        return false
+      }
       return true
     } catch (e) {
       console.error('获取余额失败', e)
