@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ethers, formatEther } from 'ethers'
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 
