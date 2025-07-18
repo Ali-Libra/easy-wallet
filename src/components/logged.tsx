@@ -70,7 +70,7 @@ export default function Logged() {
     <div className="relative">
       <button ref={buttonRef} onClick={handleClick}
         className="w-12 h-12 rounded-full bg-cover bg-center"
-        style={{ backgroundImage: 'url(/dogdog.png)' }} // 替换成 public 目录下的图片路径
+        style={{ backgroundImage: 'url(/assets/dogdog.png)' }} // 替换成 public 目录下的图片路径
       ></button>
 
       {isMenuOpen && (

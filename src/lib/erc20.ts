@@ -82,11 +82,11 @@ class Erc20Manager {
 
   getAvatar(name: string): string {
     if (name === "USDT") {
-      return "/USDT.png";
+      return "/assets/USDT.png";
     } else if (name === "USDC") {
-      return "/USDC.png";
+      return "/assets/USDC.png";
     } else {
-      return "/dogdog.png"
+      return "/assets/dogdog.png"
     }
   }
 }

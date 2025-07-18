@@ -173,30 +173,30 @@ class ChainManager {
 export const chainManager = new ChainManager([
   {
     name: ChainType.ETH, useLib: ChainClass.EVM, currency: ChainCurrnecy.Ethereum,
-    isTest: false, avatar: "/eth-mainnet.svg", domain: "eth-mainnet"
+    isTest: false, avatar: "/assets/eth-mainnet.svg", domain: "eth-mainnet"
   },
   {
     name: ChainType.ETH_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.Ethereum,
-    isTest: true, avatar: "/eth-testnet.svg", domain: "eth-sepolia"
+    isTest: true, avatar: "/assets/eth-testnet.svg", domain: "eth-sepolia"
   },
   {
     name: ChainType.MONAD_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.MONAD,
-    isTest: true, avatar: "/monad-testnet.svg", domain: "monad-testnet"
+    isTest: true, avatar: "/assets/monad-testnet.svg", domain: "monad-testnet"
   },
   {
     name: ChainType.SOLANA, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
-    isTest: false, avatar: "/solana-mainnet.svg", domain: "solana-mainnet"
+    isTest: false, avatar: "/assets/solana-mainnet.svg", domain: "solana-mainnet"
   },
   {
     name: ChainType.SOLANA_TEST, useLib: ChainClass.SOLANA, currency: ChainCurrnecy.SOLANA,
-    isTest: true, avatar: "/solana-testnet.svg", domain: "solana-devnet"
+    isTest: true, avatar: "/assets/assets/solana-testnet.svg", domain: "solana-devnet"
   },
   {
     name: ChainType.BNB, useLib: ChainClass.EVM, currency:ChainCurrnecy.BNB,
-    isTest: false, avatar: "/bnb-mainnet.svg", domain: "bnb-mainnet"
+    isTest: false, avatar: "/assets/assets/bnb-mainnet.svg", domain: "bnb-mainnet"
   },
   {
     name: ChainType.BNB_TEST, useLib: ChainClass.EVM, currency: ChainCurrnecy.BNB,
-    isTest: true, avatar: "/bnb-testnet.svg", domain: "bnb-testnet"
+    isTest: true, avatar: "/assets/bnb-testnet.svg", domain: "bnb-testnet"
   }
 ]);
