@@ -13,7 +13,6 @@ export type Erc20Info = {
   name: string;
   chain: ChainType;
   address: string;
-  value?: string;
 };
 
 class Erc20Manager {
@@ -80,6 +79,16 @@ class Erc20Manager {
   getByName(chain: string): Erc20Info[] | undefined {
     return this.erc20List.filter((info) => info.chain === chain);
   }
+
+  getAvatar(name: string): string {
+    if (name === "USDT") {
+      return "/assets/USDT.png";
+    } else if (name === "USDC") {
+      return "/assets/USDC.png";
+    } else {
+      return "/assets/dogdog.png"
+    }
+  }
 }
 
 export const erc20Manager = new Erc20Manager([
@@ -92,11 +101,6 @@ export const erc20Manager = new Erc20Manager([
     name: "USDC",
     chain: ChainType.ETH,
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  },
-  {
-    name: "USDT",
-    chain: ChainType.ETH_TEST,
-    address: "0x863aE464D7E8e6F95b845FD3AF0F9A2B2034d6dD",
   },
   {
     name: "USDT",

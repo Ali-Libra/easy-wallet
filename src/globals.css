@@ -2,13 +2,19 @@
 
 :root {
   --header-tmp: #f1a960;
-  --header: #4f39f6;
-  --text: #ffffff;
+  --header: #61d8c4;
+  --body: #fafafb;
+  --text: #000000;
   --text-notice: #364153;
-  --select: #ffffff;
-  --btn: #155dfc;
-  --btn-hover: #1447e6;
+  --select: #e5e7eb;
+  --btn: #61d8c4;
+  --btn-hover: #61d8c4;
   --btn-text: #ffffff;
 }
+
+/* #fafafb 特别好的背景色 */
+/* gray-50 #f9fafb */
+/* slat-50 #f8fafc*/
+/* gray-100 #f3f4f6 */
 
 /*  */

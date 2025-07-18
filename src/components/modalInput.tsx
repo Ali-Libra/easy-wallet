@@ -91,7 +91,7 @@ export default function ModalInput({ showText = true }: ModalInputProps) {
                             <div className="w-18 text-black">昵称</div>
                             <input
                                 ref={inputRef}
-                                className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
+                                className="w-64 text-sm border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
                                 placeholder="设置新昵称"
                             />
                             <div className="mt-0.5" />
@@ -110,7 +110,7 @@ export default function ModalInput({ showText = true }: ModalInputProps) {
                                 <input
                                     value={inputs[index]}
                                     onChange={(e) => handleInputChange(index, e.target.value)}
-                                    className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
+                                    className="w-64 text-sm border border-gray-300 rounded px-2 py-1 text-black placeholder-[var(--text-notice)"
                                     placeholder={`${title}的ID`}
                                 />
                                 <div className="mt-0.5" />
@@ -132,7 +132,7 @@ export default function ModalInput({ showText = true }: ModalInputProps) {
                                 <input
                                     value={inputs[titles.length + index]}
                                     onChange={(e) => handleInputChange(titles.length + index, e.target.value)}
-                                    className="w-72 text-sm border border-gray-300 rounded px-2 py-1 text-black"
+                                    className="w-64 text-sm border border-gray-300 rounded px-2 py-1 text-black"
                                 />
                                 <div className="mt-0.5" />
                                 <button

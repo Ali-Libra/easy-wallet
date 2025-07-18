@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { MnemonicInput } from '@/components/display'
 import { useAuth } from '@/context/auth'
-import { chainManager, ChainCurrency } from '@/lib/chain'
+import { chainManager, ChainClass } from '@/lib/chain'
 
 export default function Login() {
   const [mnemonic, setMnemonic] = useState<string>('')
@@ -27,7 +27,7 @@ export default function Login() {
         nickName = inputRef.current.value
       }
       const realMnemonic = mnemonicParam ? mnemonicParam : mnemonic
-      chainManager.generateWallet(realMnemonic, ChainCurrency.ETH).then((wallet) => {
+      chainManager.generateWallet(realMnemonic, ChainClass.EVM).then((wallet) => {
         const user = login(undefined, realMnemonic, wallet, nickName)
         localStorage.setItem('account', user.account)
         navigate('/')

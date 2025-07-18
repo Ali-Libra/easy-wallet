@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { useAuth } from '@/context/auth';
-import { chainManager, ChainCurrency } from '@/lib/chain';
+import { chainManager, ChainClass } from '@/lib/chain';
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import { hexToUint8Array } from '@/lib/util';
 
@@ -38,14 +38,14 @@ export default function Send() {
       return
     }
 
-    const [url, currency] = chainManager.getUrlByName(user.chain, urlKey)
-    if (!url) {
+    const [url, chain] = chainManager.getUrlByName(user.chain, urlKey)
+    if (!url || !chain) {
       setStatus('请先登录钱包')
       return
     }
     try {
       setSending(true)
-      if (currency == ChainCurrency.ETH) {
+      if (chain.useLib == ChainClass.EVM) {
         const provider = new ethers.JsonRpcProvider(url);
         const newWallet = new ethers.Wallet(wallet.privateKey, provider)
         const tx = {
@@ -55,7 +55,7 @@ export default function Send() {
         const transaction = await newWallet.sendTransaction(tx)
         await transaction.wait()
         setStatus(`交易已发送！交易哈希: ${transaction.hash}`);
-      } else if (currency == ChainCurrency.SOLANA) {
+      } else if (chain.useLib == ChainClass.SOLANA) {
         const connection = new Connection(url, 'confirmed')
         const from = Keypair.fromSecretKey(hexToUint8Array(wallet.privateKey))
         const to = new PublicKey(toAddress)
@@ -86,7 +86,7 @@ export default function Send() {
 
   return (
     <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">发送</h2>
+      {/* <h2 className="text-2xl font-bold text-center mb-6">发送</h2> */}
 
       <input
         list="history-addresses"
@@ -114,7 +114,7 @@ export default function Send() {
 
       <button
         onClick={sendTransaction}
-        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        className="w-full  py-2 rounded-md bg-[var(--btn)] hover-[var(--btn-hover)] text-[var(--btn-text)]"
       >
         {sending ? '发送中' : '发送'}
       </button>
